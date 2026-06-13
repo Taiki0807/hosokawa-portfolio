@@ -1,0 +1,52 @@
+---
+title: Flexbox
+category: ボックスモデル
+date: 2026-05-20
+readingTime: 5
+---
+
+## Flexbox とは
+
+Flexbox（Flexible Box Layout）は、1次元のレイアウトを効率よく組むためのCSSの仕組みです。横並び・縦並びどちらにも対応できます。
+
+<Callout type="info">
+  display: flex を親要素に指定するだけで子要素が flex アイテムになります。
+</Callout>
+
+## 基本の書き方
+
+親要素に `display: flex` を指定します。
+
+<CodePreview>
+  <div className="flex gap-2.5">
+    <div className="rounded-lg bg-purple-600 px-6 py-4 font-bold text-white">Box 1</div>
+    <div className="rounded-lg bg-purple-400 px-6 py-4 font-bold text-white">Box 2</div>
+    <div className="rounded-lg bg-purple-300 px-6 py-4 font-bold text-white">Box 3</div>
+  </div>
+</CodePreview>
+
+## 主要プロパティ
+
+### justify-content（主軸方向）
+
+横方向（主軸）の並び方を指定します。
+
+- `flex-start`：左寄せ（デフォルト）
+- `center`：中央
+- `flex-end`：右寄せ
+- `space-between`：両端揃えで均等配置
+- `space-around`：各要素の周りに均等スペース
+
+### align-items（交差軸方向）
+
+縦方向（交差軸）の揃え方を指定します。
+
+- `stretch`：引き伸ばす（デフォルト）
+- `center`：中央揃え
+- `flex-start`：上揃え
+- `flex-end`：下揃え
+
+<Callout type="success">
+  よく使う組み合わせ：justify-content: center と align-items: center
+  を同時に指定すると完全中央揃えになります。
+</Callout>
