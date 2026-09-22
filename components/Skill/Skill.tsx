@@ -1,22 +1,40 @@
 import { Zap, Code2 } from 'lucide-react'
 import { skills } from '@/data'
 
-type NodePos = { x: number; y: number; reverse?: boolean; tipAbove?: boolean; delay: string }
+type NodePos = {
+  /** SVGのviewBox座標系(640x520)での位置。<line>の端点に使う */
+  x: number
+  y: number
+  /** コンテナ幅に対する%位置。絶対配置のノードdivに使う */
+  xPct: number
+  yPct: number
+  reverse?: boolean
+  tipAbove?: boolean
+  delay: string
+}
 
 // ハブ座標とリング半径は元デザイン(orbit-ring-inner/outer)と同じ値。
 // スキル数はdata.tsの増減に追従するよう、円周上に均等配置で自動計算する。
 const HUB = { x: 300, y: 250 }
 
+const VIEW_W = 640
+const VIEW_H = 520
+
+// コンテナはSVGのviewBoxと同じ 640x520 比率(aspect-ratio)で伸縮するため、
+// 絶対配置するノードもpx指定ではなく% (viewBox比)で置く。こうしないとスマホ幅で
+// コンテナだけ縮んでもノードは元のpx座標のままはみ出して崩れる。
 function ringPositions(count: number, radius: number, startAngleDeg: number): NodePos[] {
   if (count === 0) return []
   return Array.from({ length: count }, (_, i) => {
     const angleDeg = startAngleDeg + (360 / count) * i
     const angleRad = (angleDeg * Math.PI) / 180
-    const x = Math.round(HUB.x + radius * Math.cos(angleRad))
-    const y = Math.round(HUB.y + radius * Math.sin(angleRad))
+    const x = HUB.x + radius * Math.cos(angleRad)
+    const y = HUB.y + radius * Math.sin(angleRad)
     return {
       x,
       y,
+      xPct: (x / VIEW_W) * 100,
+      yPct: (y / VIEW_H) * 100,
       reverse: x < HUB.x,
       tipAbove: y > HUB.y,
       delay: `${(0.05 + i * 0.1).toFixed(2)}s`,
@@ -33,7 +51,7 @@ const outerPositions = ringPositions(outerSkills.length, 235, -68)
 const Skill = () => {
   return (
     <div id="skills" className="px-6 pb-16 sm:px-10 lg:px-20">
-      <div className="bg-surface-950 relative flex flex-col items-center gap-14 overflow-hidden rounded-[28px] p-10 lg:flex-row lg:justify-between lg:p-16">
+      <div className="bg-surface-950 relative flex flex-col items-center gap-14 overflow-hidden rounded-[28px] p-6 sm:p-10 lg:flex-row lg:justify-between lg:p-16">
         <div className="pointer-events-none absolute inset-0 overflow-hidden rounded-[28px]">
           <div className="absolute -top-36 -right-30 h-[420px] w-[420px] rounded-full bg-[radial-gradient(circle,rgba(122,111,224,0.28),rgba(122,111,224,0)_70%)]" />
         </div>
@@ -71,7 +89,7 @@ const Skill = () => {
           </div>
         </div>
 
-        <div className="relative z-10 h-[420px] w-full max-w-[640px] flex-none sm:h-[520px]">
+        <div className="relative z-10 aspect-[640/520] w-full max-w-[640px] flex-none">
           <svg
             className="absolute inset-0 h-full w-full overflow-visible"
             viewBox="0 0 640 520"
@@ -115,7 +133,7 @@ const Skill = () => {
 
           <div
             className="skill-hub absolute flex h-[108px] w-[108px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-[radial-gradient(circle_at_35%_30%,#7a6fe0,#342c7a_75%)]"
-            style={{ left: '300px', top: '250px' }}
+            style={{ left: `${(HUB.x / VIEW_W) * 100}%`, top: `${(HUB.y / VIEW_H) * 100}%` }}
           >
             <Code2 className="h-8 w-8 text-lime-500" strokeWidth={1.8} />
           </div>
@@ -127,7 +145,7 @@ const Skill = () => {
               <div
                 key={skill.name}
                 className={`skill-node absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-2.5 ${pos.reverse ? 'flex-row-reverse' : ''}`}
-                style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+                style={{ left: `${pos.xPct}%`, top: `${pos.yPct}%` }}
               >
                 <span
                   className="skill-node-dot h-3.5 w-3.5 flex-none rounded-full bg-lime-500 shadow-[0_0_0_6px_rgba(203,235,77,0.16)]"
@@ -156,7 +174,7 @@ const Skill = () => {
               <div
                 key={skill.name}
                 className={`skill-node absolute flex -translate-x-1/2 -translate-y-1/2 items-center gap-2 ${pos.reverse ? 'flex-row-reverse' : ''}`}
-                style={{ left: `${pos.x}px`, top: `${pos.y}px` }}
+                style={{ left: `${pos.xPct}%`, top: `${pos.yPct}%` }}
               >
                 <span
                   className="skill-node-dot border-ink-inverse-50/55 h-2.5 w-2.5 flex-none rounded-full border-[1.5px]"
