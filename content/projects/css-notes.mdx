@@ -1,0 +1,25 @@
+---
+title: CSS学習記録サイト
+description: Next.js + MDXで構築した自分のCSS学習ノート。コンポーネントのプレビュー機能付きで、学んだことをそのまま記録・公開しています。
+date: 2026-06-13
+readingTime: 3
+tags: [Next.js, MDX, Tailwind, TypeScript]
+link: { label: 'サイトを見る', href: '/css-notes' }
+---
+
+## 概要
+
+CSSを学びながら書いているノートを、そのまま公開しているサイトです。学んだプロパティや考え方を、忘れないうちに記録する場として作りました。
+
+## 主な機能
+
+- **MDXベースの記事**: 学習ノートはすべてMDXで管理していて、記事ごとに`.mdx`ファイルを追加するだけで公開できます。
+- **コードプレビュー**: `<CodePreview>`コンポーネントで、実際のコードとその表示結果をタブで切り替えて確認できます。
+- **補足ボックス**: `<Callout>`コンポーネントで、Tipや注意点を本文中に差し込めます。
+
+## 使った技術
+
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- MDX (next-mdx-remote)

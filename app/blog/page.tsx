@@ -7,10 +7,8 @@ export default function BlogPage() {
   return (
     <div>
       <div className="mb-9">
-        <h1 className="mb-1.5 text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
-          Blog
-        </h1>
-        <p className="text-sm text-gray-500">技術や日々の学びについて書いています。</p>
+        <h1 className="text-ink-950 mb-1.5 text-2xl font-black tracking-tight sm:text-3xl">Blog</h1>
+        <p className="text-ink-600 text-sm">技術や日々の学びについて書いています。</p>
       </div>
 
       <div className="flex flex-col gap-4">
@@ -18,21 +16,21 @@ export default function BlogPage() {
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="block rounded-2xl border border-purple-100 bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-md"
+            className="border-surface-200 bg-surface-0 block rounded-2xl border p-5 shadow-[0_20px_40px_-16px_rgba(16,14,24,0.1)] transition hover:-translate-y-0.5"
           >
             <div className="mb-2 flex items-center gap-2">
-              <span className="inline-block rounded-full border border-purple-200 bg-purple-50 px-3 py-0.5 font-mono text-xs font-bold text-purple-600">
+              <span className="border-surface-200 bg-surface-0 text-ink-950 inline-block rounded-full border px-3 py-0.5 text-xs font-bold">
                 {post.category}
               </span>
-              <span className="font-mono text-xs text-gray-400">
+              <span className="text-ink-600 text-xs">
                 {post.date} · {post.readingTime} min
               </span>
             </div>
 
-            <h2 className="mb-1.5 text-base font-bold text-gray-900">{post.title}</h2>
+            <h2 className="text-ink-950 mb-1.5 text-base font-bold">{post.title}</h2>
 
             {post.excerpt && (
-              <p className="mb-2 text-sm leading-relaxed text-gray-500">{post.excerpt}</p>
+              <p className="text-ink-600 mb-2 text-sm leading-relaxed">{post.excerpt}</p>
             )}
 
             {post.tags && (
@@ -40,7 +38,7 @@ export default function BlogPage() {
                 {post.tags.map((tag) => (
                   <span
                     key={tag}
-                    className="rounded-full bg-gray-100 px-2.5 py-0.5 font-mono text-xs text-gray-500"
+                    className="bg-surface-50 text-ink-600 rounded-full px-2.5 py-0.5 text-xs"
                   >
                     #{tag}
                   </span>

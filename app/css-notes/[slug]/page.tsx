@@ -1,8 +1,11 @@
 import { notFound } from 'next/navigation'
+import Link from 'next/link'
 import { MDXRemote } from 'next-mdx-remote/rsc'
+import { ArrowLeft } from 'lucide-react'
 import { getNoteBySlug, getAllNoteSlugs } from '@/lib/content'
 import { Callout } from '@/components/ui/Callout'
 import { CodePreview } from '@/components/ui/CodePreview'
+import { proseClassName } from '@/components/ui/prose'
 
 // MDX内で使えるコンポーネントを登録
 const mdxComponents = {
@@ -33,19 +36,33 @@ export default async function NotePage({ params }: Props) {
 
   return (
     <article>
-      <span className="mb-4 inline-block rounded-full border border-purple-200 bg-purple-50 px-3 py-1 font-mono text-xs font-bold text-purple-600">
-        {frontmatter.category}
-      </span>
+      <Link
+        href="/css-notes"
+        className="text-brand-500 mb-5 inline-flex items-center gap-1.5 text-[13px] font-bold"
+      >
+        <ArrowLeft className="h-3.5 w-3.5" />
+        CSS Notes
+      </Link>
 
-      <h1 className="mb-2 text-3xl font-black tracking-tight text-gray-900 sm:text-4xl">
+      <div className="mb-4 flex items-center gap-2.5">
+        <span className="text-brand-500 text-xs font-bold tracking-[0.12em] uppercase">
+          CSS Notes
+        </span>
+        <span className="bg-ink-600/40 h-[3px] w-[3px] rounded-full" />
+        <span className="text-ink-600 text-xs font-bold">{frontmatter.category}</span>
+      </div>
+
+      <h1 className="text-ink-950 mb-2 font-mono text-3xl font-black tracking-tight sm:text-4xl">
         {frontmatter.title}
       </h1>
 
-      <div className="mb-8 border-b border-purple-100 pb-6 font-mono text-sm text-gray-400">
-        {frontmatter.date} · {frontmatter.readingTime} min read
+      <div className="border-surface-200 text-ink-600 mb-8 flex items-center gap-2.5 border-b pb-6 text-sm">
+        <span>{frontmatter.date}</span>
+        <span className="bg-ink-600/40 h-[3px] w-[3px] rounded-full" />
+        <span>{frontmatter.readingTime} min read</span>
       </div>
 
-      <div className="prose">
+      <div className={proseClassName}>
         <MDXRemote source={content} components={mdxComponents} />
       </div>
     </article>

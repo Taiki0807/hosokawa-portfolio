@@ -7,10 +7,10 @@ export default function CssNotesPage() {
   return (
     <div>
       <div className="mb-9">
-        <h1 className="mb-1.5 text-2xl font-black tracking-tight text-gray-900 sm:text-3xl">
+        <h1 className="text-ink-950 mb-1.5 text-2xl font-black tracking-tight sm:text-3xl">
           CSS 学習記録
         </h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-ink-600 text-sm">
           CSSを学びながら書いたノート。プレビュー付きのサンプルコードと解説。
         </p>
       </div>
@@ -20,13 +20,13 @@ export default function CssNotesPage() {
           <Link
             key={note.slug}
             href={`/css-notes/${note.slug}`}
-            className="rounded-2xl border border-purple-100 bg-white p-5 transition hover:-translate-y-0.5 hover:shadow-md"
+            className="border-surface-200 bg-surface-0 rounded-2xl border p-5 shadow-[0_20px_40px_-16px_rgba(16,14,24,0.1)] transition hover:-translate-y-0.5"
           >
-            <span className="mb-3 inline-block rounded-full border border-purple-200 bg-purple-50 px-3 py-0.5 font-mono text-xs font-bold text-purple-600">
+            <span className="border-surface-200 bg-surface-0 text-ink-950 mb-3 inline-block rounded-full border px-3 py-0.5 text-xs font-bold">
               {note.category}
             </span>
-            <h2 className="mb-1.5 text-base font-bold text-gray-900">{note.title}</h2>
-            <div className="flex items-center gap-2 font-mono text-xs text-gray-400">
+            <h2 className="text-ink-950 mb-1.5 text-base font-bold">{note.title}</h2>
+            <div className="text-ink-600 flex items-center gap-2 text-xs">
               <span>{note.date}</span>
               <span>·</span>
               <span>{note.readingTime} min</span>

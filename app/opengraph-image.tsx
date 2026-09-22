@@ -7,7 +7,7 @@ export default function OGImage() {
   return new ImageResponse(
     <div
       style={{
-        background: 'linear-gradient(135deg, #f0f2ff 0%, #e8eaff 100%)',
+        background: '#f4f3fb',
         width: '100%',
         height: '100%',
         display: 'flex',
@@ -19,10 +19,10 @@ export default function OGImage() {
     >
       <div
         style={{
-          background: '#6c4ff6',
+          background: 'linear-gradient(135deg, #7a6fe0 0%, #342c7a 100%)',
           borderRadius: 16,
           padding: '16px 28px',
-          color: 'white',
+          color: '#f5f4fb',
           fontSize: 24,
           fontWeight: 700,
           marginBottom: 32,
@@ -34,7 +34,7 @@ export default function OGImage() {
         style={{
           fontSize: 56,
           fontWeight: 900,
-          color: '#1a1a2e',
+          color: '#0a0a12',
           marginBottom: 16,
         }}
       >
@@ -43,7 +43,7 @@ export default function OGImage() {
       <div
         style={{
           fontSize: 24,
-          color: '#6b6b8a',
+          color: '#5b5872',
         }}
       >
         フルスタックエンジニア

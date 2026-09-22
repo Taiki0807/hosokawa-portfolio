@@ -8,10 +8,10 @@ const ResponsiveNav = () => {
   const openNavHandler = () => setSnowNav(true)
   const closeNavHandler = () => setSnowNav(false)
   return (
-    <div>
+    <>
       <Nav openNav={openNavHandler} />
       <MobileNav showNav={showNav} closeNav={closeNavHandler} />
-    </div>
+    </>
   )
 }
 

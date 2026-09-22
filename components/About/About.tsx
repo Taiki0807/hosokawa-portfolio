@@ -1,82 +1,45 @@
-import React from 'react'
-import SectionHeading from '../Helper/SectionHeading'
-import { about, profile } from '@/data'
+import { Zap } from 'lucide-react'
+import { about } from '@/data'
 
 const About = () => {
+  const [years, techs, certs] = about.stats
+
   return (
-    <div className="bg-gray-100 py-16" id="about">
-      <div className="mx-auto flex max-w-5xl flex-col items-start px-6">
-        <SectionHeading tag="// About" title="自己紹介" description="開発者としての私について。" />
-
-        <div className="grid w-full items-center gap-8 lg:grid-cols-2">
-          {/* 左: コードエディタ風カード */}
-          <div className="overflow-hidden rounded-2xl bg-gray-900 shadow-lg">
-            {/* ウィンドウバー */}
-            <div className="flex items-center gap-2 border-b border-gray-700 bg-gray-800 px-4 py-3">
-              <span className="h-3 w-3 rounded-full bg-red-500" />
-              <span className="h-3 w-3 rounded-full bg-yellow-400" />
-              <span className="h-3 w-3 rounded-full bg-green-500" />
-              <span className="ml-3 font-mono text-xs text-gray-400">profile.json</span>
-            </div>
-
-            {/* コード内容 */}
-            <pre className="overflow-x-auto p-6 font-mono text-sm leading-relaxed">
-              <code>
-                <span className="text-gray-500">{'{'}</span>
-                {'\n'}
-                {'  '}
-                <span className="text-purple-400">&quot;name&quot;</span>:{' '}
-                <span className="text-green-400">&quot;{profile.name}&quot;</span>,{'\n'}
-                {'  '}
-                <span className="text-purple-400">&quot;role&quot;</span>:{' '}
-                <span className="text-green-400">&quot;{profile.role}&quot;</span>,{'\n'}
-                {'  '}
-                <span className="text-purple-400">&quot;location&quot;</span>:{' '}
-                <span className="text-green-400">&quot;{profile.location}&quot;</span>,{'\n'}
-                {'  '}
-                <span className="text-purple-400">&quot;status&quot;</span>:{' '}
-                <span className="text-green-400">&quot;available&quot;</span>,{'\n'}
-                {'  '}
-                <span className="text-purple-400">&quot;highlights&quot;</span>: [{'\n'}
-                {about.highlights.map((h, i) => (
-                  <React.Fragment key={h.label}>
-                    {'    '}
-                    <span className="text-green-400">
-                      &quot;{h.icon} {h.label}&quot;
-                    </span>
-                    {i < about.highlights.length - 1 ? ',' : ''}
-                    {'\n'}
-                  </React.Fragment>
-                ))}
-                {'  '}]{'\n'}
-                <span className="text-gray-500">{'}'}</span>
-              </code>
-            </pre>
-          </div>
-
-          {/* 右: テキスト + 統計 */}
-          <div>
-            <h3 className="mb-4 text-xl font-bold text-gray-900">{about.heading}</h3>
-
-            <div className="mb-8 space-y-3">
-              {about.paragraphs.map((p, i) => (
-                <p key={i} className="text-sm leading-relaxed text-gray-500">
-                  {p}
-                </p>
-              ))}
-            </div>
-
-            {/* 統計 */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {about.stats.map((stat) => (
-                <div key={stat.label} className="text-center sm:text-left">
-                  <div className="text-2xl font-black text-purple-600">{stat.number}</div>
-                  <div className="mt-1 text-xs text-gray-500">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
+    <div id="about" className="px-6 py-16 sm:px-10 lg:px-20">
+      <div className="from-brand-400 via-brand-500 to-brand-700 relative overflow-hidden rounded-[20px] bg-linear-[115deg] p-10 sm:p-16">
+        <svg
+          className="pointer-events-none absolute inset-0 h-full w-full"
+          preserveAspectRatio="none"
+          viewBox="0 0 1280 220"
+          aria-hidden="true"
+        >
+          <g stroke="#ffffff" strokeOpacity="0.08" strokeWidth="30" strokeLinecap="round">
+            <line x1="1000" y1="280" x2="1160" y2="-60" />
+            <line x1="1090" y1="280" x2="1250" y2="-60" />
+            <line x1="1180" y1="280" x2="1340" y2="-60" />
+          </g>
+        </svg>
+        <div className="relative flex items-center gap-2">
+          <Zap className="h-3.5 w-3.5 fill-lime-500 text-lime-500" />
+          <span className="text-xs font-bold tracking-[0.12em] text-lime-500 uppercase">
+            At a glance
+          </span>
         </div>
+        <p className="text-ink-inverse-50 relative mt-5 max-w-3xl text-xl leading-[1.9] font-semibold sm:text-2xl lg:text-[26px]">
+          エンジニアとして
+          <span className="mx-1 text-4xl leading-none font-black text-lime-500 sm:text-5xl">
+            {years.number}
+          </span>
+          年、
+          <span className="mx-1 text-4xl leading-none font-black text-lime-500 sm:text-5xl">
+            {techs.number}
+          </span>
+          の技術に触れながら
+          <span className="mx-1 text-4xl leading-none font-black text-lime-500 sm:text-5xl">
+            {certs.number}
+          </span>
+          つのクラウド資格を取得してきました。
+        </p>
       </div>
     </div>
   )

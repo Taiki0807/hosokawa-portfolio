@@ -1,4 +1,5 @@
 import React from 'react'
+import { Info, Sparkle, AlertTriangle, CircleAlert } from 'lucide-react'
 
 type CalloutType = 'info' | 'success' | 'warning' | 'error'
 
@@ -7,34 +8,69 @@ type CalloutProps = {
   children: React.ReactNode
 }
 
-const styles: Record<CalloutType, { box: string; icon: string }> = {
+const styles: Record<
+  CalloutType,
+  {
+    border: string
+    badge: string
+    iconStroke: string
+    label: string
+    labelColor: string
+    Icon: typeof Info
+  }
+> = {
   info: {
-    box: 'bg-blue-50 border-blue-200 text-blue-700',
-    icon: 'ℹ️',
+    border: 'border-l-brand-500',
+    badge: 'bg-brand-500',
+    iconStroke: '#ffffff',
+    label: 'Info',
+    labelColor: 'text-brand-500',
+    Icon: Info,
   },
   success: {
-    box: 'bg-green-50 border-green-200 text-green-700',
-    icon: '✅',
+    border: 'border-l-lime-500',
+    badge: 'bg-lime-500',
+    iconStroke: '#100e18',
+    label: 'Tip',
+    labelColor: 'text-[#5c6a12]',
+    Icon: Sparkle,
   },
   warning: {
-    box: 'bg-orange-50 border-orange-200 text-orange-700',
-    icon: '⚠️',
+    border: 'border-l-amber-600',
+    badge: 'bg-amber-600',
+    iconStroke: '#ffffff',
+    label: 'Warning',
+    labelColor: 'text-amber-600',
+    Icon: AlertTriangle,
   },
   error: {
-    box: 'bg-red-50 border-red-200 text-red-700',
-    icon: '🚫',
+    border: 'border-l-red-600',
+    badge: 'bg-red-600',
+    iconStroke: '#ffffff',
+    label: 'Error',
+    labelColor: 'text-red-600',
+    Icon: CircleAlert,
   },
 }
 
 export function Callout({ type = 'info', children }: CalloutProps) {
-  const style = styles[type]
+  const { border, badge, iconStroke, label, labelColor, Icon } = styles[type]
 
   return (
     <div
-      className={`my-4 flex items-start gap-2.5 rounded-lg border px-4 py-3.5 text-sm ${style.box}`}
+      className={`not-prose bg-surface-0 my-5 flex items-start gap-4 rounded-r-2xl border-l-4 px-6 py-5 shadow-[0_20px_40px_-16px_rgba(16,14,24,0.16)] ${border}`}
     >
-      <span className="mt-0.5 shrink-0">{style.icon}</span>
-      <div className="[&>p]:m-0 [&>p]:text-inherit">{children}</div>
+      <div className={`flex h-8 w-8 flex-none items-center justify-center rounded-full ${badge}`}>
+        <Icon className="h-[15px] w-[15px]" style={{ color: iconStroke }} strokeWidth={2.2} />
+      </div>
+      <div className="flex flex-col gap-1.5">
+        <div className={`text-[11px] font-extrabold tracking-[0.08em] uppercase ${labelColor}`}>
+          {label}
+        </div>
+        <div className="[&_code]:text-brand-700 [&_code]:bg-surface-50 [&_code]:border-surface-200 text-[14px] leading-[1.8] text-[#3d3a52] [&_code]:rounded-md [&_code]:border [&_code]:px-2 [&_code]:py-0.5 [&_code]:font-mono [&_code]:font-bold [&>p]:m-0">
+          {children}
+        </div>
+      </div>
     </div>
   )
 }

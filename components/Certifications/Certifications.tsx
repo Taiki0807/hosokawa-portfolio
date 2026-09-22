@@ -1,61 +1,77 @@
 import Image from 'next/image'
-import SectionHeading from '../Helper/SectionHeading'
+import { Zap } from 'lucide-react'
 import { certifications } from '@/data'
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+function formatDate(date: string) {
+  const [year, month] = date.split('-')
+  const label = MONTHS[Number(month) - 1]
+  return label ? `${label} ${year}` : date
+}
+
+function tierOf(name: string) {
+  return /professional/i.test(name) ? 'Professional' : 'Associate'
+}
+
 const Certifications = () => {
-  // 資格が登録されていない場合はセクション自体を表示しない
   if (certifications.length === 0) return null
 
   return (
-    <div className="bg-gray-100 py-16">
-      <div className="mx-auto flex max-w-5xl flex-col items-start px-6">
-        <SectionHeading
-          tag="// Certifications"
-          title="保有資格"
-          description="取得した認定資格・バッジ一覧です。"
-        />
+    <div className="flex flex-col gap-12 px-6 pb-24 sm:px-10 lg:px-20">
+      <div className="flex items-center gap-2">
+        <Zap className="fill-brand-500 text-brand-500 h-3.5 w-3.5" />
+        <span className="text-brand-500 text-xs font-bold tracking-[0.12em] uppercase">
+          Certifications
+        </span>
+      </div>
 
-        <div className="flex w-full justify-center">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {certifications.map((cert) => (
-              <a
-                key={cert.name}
-                href={cert.credentialUrl ?? '#'}
-                target={cert.credentialUrl ? '_blank' : undefined}
-                rel={cert.credentialUrl ? 'noopener noreferrer' : undefined}
-                className="flex w-full max-w-sm flex-col items-center rounded-2xl border border-gray-100 bg-white p-6 text-center shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
+      <div className="relative grid grid-cols-1 gap-y-12 sm:grid-cols-3">
+        <div className="from-brand-200 via-brand-400 to-brand-200 absolute top-[60px] right-[16.66%] left-[16.66%] hidden h-0.5 bg-linear-to-r sm:block" />
+
+        {certifications.map((cert) => {
+          const tier = tierOf(cert.name)
+          return (
+            <a
+              key={cert.name}
+              href={cert.credentialUrl ?? '#'}
+              target={cert.credentialUrl ? '_blank' : undefined}
+              rel={cert.credentialUrl ? 'noopener noreferrer' : undefined}
+              className="relative z-10 flex flex-col items-center gap-1 text-center"
+            >
+              <div
+                className={`flex h-[120px] w-[120px] items-center justify-center rounded-full p-1.5 ${
+                  tier === 'Professional'
+                    ? 'bg-[conic-gradient(from_220deg,#cbeb4d,#7a6fe0,#cbeb4d)] shadow-[0_18px_30px_-14px_rgba(203,235,77,0.35)]'
+                    : 'bg-[conic-gradient(from_220deg,#7a6fe0,#342c7a,#7a6fe0)] shadow-[0_18px_30px_-14px_rgba(52,44,122,0.45)]'
+                }`}
               >
-                {/* バッジ画像 */}
-                {cert.badgeUrl ? (
-                  <div className="relative mb-4 h-20 w-20">
-                    <Image
-                      src={cert.badgeUrl}
-                      alt={cert.name}
-                      fill
-                      sizes="80px"
-                      className="object-contain"
-                    />
-                  </div>
-                ) : (
-                  <div className="mb-4 flex h-20 w-20 items-center justify-center rounded-full bg-purple-100 text-2xl">
-                    🏅
-                  </div>
-                )}
-
-                {/* 資格名 */}
-                <h3 className="mb-1 text-base font-bold text-gray-900">{cert.name}</h3>
-
-                {/* 発行元 */}
-                <p className="mb-1 text-sm text-gray-500">{cert.issuer}</p>
-
-                {/* 取得日 */}
-                <span className="mt-2 inline-block rounded-full border border-purple-200 bg-purple-50 px-3 py-0.5 font-mono text-xs text-purple-600">
-                  {cert.date}
-                </span>
-              </a>
-            ))}
-          </div>
-        </div>
+                <div className="bg-surface-0 flex h-full w-full items-center justify-center overflow-hidden rounded-full">
+                  {cert.badgeUrl ? (
+                    <div className="relative h-[84%] w-[84%]">
+                      <Image
+                        src={cert.badgeUrl}
+                        alt={cert.name}
+                        fill
+                        sizes="100px"
+                        className="object-contain"
+                      />
+                    </div>
+                  ) : null}
+                </div>
+              </div>
+              <div
+                className={`mt-5 text-xs font-bold tracking-[0.1em] uppercase ${
+                  tier === 'Professional' ? 'text-[#5c6a12]' : 'text-brand-500'
+                }`}
+              >
+                {tier}
+              </div>
+              <div className="text-ink-950 max-w-[200px] text-[17px] font-bold">{cert.name}</div>
+              <div className="text-ink-600 text-[13px]">{formatDate(cert.date)}</div>
+            </a>
+          )
+        })}
       </div>
     </div>
   )

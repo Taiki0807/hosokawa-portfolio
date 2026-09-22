@@ -1,64 +1,47 @@
 import Link from 'next/link'
-import SectionHeading from '../Helper/SectionHeading'
-import { projects } from '@/data'
+import { Zap, FolderKanban } from 'lucide-react'
+import { getAllProjects } from '@/lib/content'
 
 const Project = () => {
+  const projects = getAllProjects()
+
+  if (projects.length === 0) return null
+
   return (
-    <div className="bg-gray-100 py-16" id="projects">
-      <div className="mx-auto flex max-w-5xl flex-col items-start px-6">
-        <SectionHeading
-          tag="// 制作物"
-          title="作ったもの"
-          description="学習中に制作したプロジェクトや個人開発の成果物です。"
-        />
+    <div id="projects" className="flex flex-col gap-8 px-6 pb-16 sm:px-10 lg:px-20">
+      <div className="flex items-center gap-2">
+        <Zap className="fill-brand-500 text-brand-500 h-3.5 w-3.5" />
+        <span className="text-brand-500 text-xs font-bold tracking-[0.12em] uppercase">
+          Featured project
+        </span>
+      </div>
 
-        <div className="flex w-full justify-center">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {projects.map((project) => (
-              <div
-                key={project.title}
-                className="flex w-full max-w-sm flex-col rounded-2xl border border-gray-100 bg-white p-6 shadow-sm"
-              >
-                <div className="mb-4 text-3xl">{project.emoji}</div>
-
-                <h3 className="mb-2 text-lg font-bold text-gray-900">{project.title}</h3>
-
-                <p className="mb-4 flex-1 text-sm leading-relaxed text-gray-500">
+      <div className="flex flex-col gap-6">
+        {projects.map((project) => (
+          <Link key={project.slug} href={`/projects/${project.slug}`} className="block">
+            <div className="bg-surface-0 flex w-full flex-col items-center gap-8 rounded-[28px] p-8 shadow-[0_20px_40px_-16px_rgba(16,14,24,0.16)] transition-transform hover:-translate-y-0.5 sm:flex-row sm:p-12">
+              <div className="bg-brand-200 flex h-40 w-full flex-none items-center justify-center rounded-[20px] sm:w-[220px]">
+                <FolderKanban className="text-brand-700 h-16 w-16" strokeWidth={1.3} />
+              </div>
+              <div className="flex flex-col gap-3">
+                <div className="text-ink-950 text-2xl font-black">{project.title}</div>
+                <p className="text-ink-600 max-w-xl text-[15px] leading-[1.7]">
                   {project.description}
                 </p>
-
-                <div className="mb-4 flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-2">
                   {project.tags.map((tag) => (
                     <span
                       key={tag}
-                      className="rounded-full border border-purple-200 bg-purple-50 px-3 py-1 font-mono text-xs font-semibold text-purple-600"
+                      className="bg-surface-50 text-ink-950 inline-flex items-center rounded-full px-4 py-2 text-[13px] font-bold"
                     >
                       {tag}
                     </span>
                   ))}
                 </div>
-
-                {project.internal ? (
-                  <Link
-                    href={project.link.href}
-                    className="inline-flex w-fit items-center gap-1 rounded-lg border border-purple-200 px-4 py-2 text-sm font-bold text-purple-600 transition hover:bg-purple-50"
-                  >
-                    → {project.link.label}
-                  </Link>
-                ) : (
-                  <a
-                    href={project.link.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex w-fit items-center gap-1 rounded-lg border border-purple-200 px-4 py-2 text-sm font-bold text-purple-600 transition hover:bg-purple-50"
-                  >
-                    → {project.link.label}
-                  </a>
-                )}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          </Link>
+        ))}
       </div>
     </div>
   )

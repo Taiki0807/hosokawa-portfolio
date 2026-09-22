@@ -11,8 +11,8 @@ const Home = () => {
   return (
     <div className="overflow-hidden">
       <Hero />
-      <About />
       <Skill />
+      <About />
       <Certifications />
       <Project />
       <Blog />

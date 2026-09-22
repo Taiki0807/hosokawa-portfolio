@@ -84,6 +84,39 @@ export function getPostsByCategory(): Record<string, PostMeta[]> {
 }
 
 // ============================================
+// 制作物（content/projects/*.mdx）
+// ============================================
+
+const PROJECTS_DIR = path.join(process.cwd(), 'content', 'projects')
+
+export type ProjectFrontmatter = {
+  title: string
+  description: string
+  date: string
+  readingTime: number
+  tags: string[]
+  link?: { label: string; href: string }
+}
+
+export type ProjectMeta = ProjectFrontmatter & { slug: string }
+
+export function getAllProjects(): ProjectMeta[] {
+  return readAllMeta(PROJECTS_DIR) as ProjectMeta[]
+}
+
+export function getProjectBySlug(slug: string) {
+  return readBySlug(PROJECTS_DIR, slug) as {
+    slug: string
+    frontmatter: ProjectFrontmatter
+    content: string
+  }
+}
+
+export function getAllProjectSlugs(): string[] {
+  return readAllSlugs(PROJECTS_DIR)
+}
+
+// ============================================
 // 共通ヘルパー
 // ============================================
 

@@ -1,15 +1,22 @@
 import Link from 'next/link'
-import { Terminal } from 'lucide-react'
+import Image from 'next/image'
 
-const Logo = () => {
+type Props = {
+  inverted?: boolean
+}
+
+const Logo = ({ inverted = false }: Props) => {
+  if (inverted) {
+    return (
+      <Link href="/" className="flex items-center">
+        <Image src="/logo-mark-dark.svg" alt="Hosokawa Lab" width={26} height={26} />
+      </Link>
+    )
+  }
+
   return (
-    <Link href="/" className="group flex items-center space-x-2">
-      <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-600 transition-colors group-hover:bg-purple-500">
-        <Terminal className="h-6 w-6 text-white" />
-      </div>
-      <h1 className="hidden font-bold text-gray-900 transition-colors group-hover:text-purple-600 sm:block sm:text-xl md:text-2xl">
-        {'Hosokawa-lab'}
-      </h1>
+    <Link href="/" className="flex items-center">
+      <Image src="/logo-lockup.svg" alt="Hosokawa Lab" width={116} height={34} priority />
     </Link>
   )
 }

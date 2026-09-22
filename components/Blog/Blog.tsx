@@ -1,49 +1,46 @@
 import Link from 'next/link'
-import SectionHeading from '../Helper/SectionHeading'
+import { Zap, ArrowRight } from 'lucide-react'
 import { getAllPosts } from '@/lib/content'
 
 const Blog = () => {
-  const posts = getAllPosts().slice(0, 3) // 最新3件
+  const posts = getAllPosts().slice(0, 1)
 
   if (posts.length === 0) return null
 
   return (
-    <div className="bg-gray-100 py-16">
-      <div className="mx-auto flex max-w-5xl flex-col items-start px-6">
-        <SectionHeading
-          tag="// Blog"
-          title="ブログ"
-          description="技術や日々の学びについて書いています。"
-        />
-
-        <div className="flex w-full justify-center">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {posts.map((post) => (
-              <Link
-                key={post.slug}
-                href={`/blog/${post.slug}`}
-                className="w-full max-w-sm rounded-2xl border border-gray-100 bg-white p-6 shadow-sm transition hover:-translate-y-0.5 hover:shadow-md"
-              >
-                <span className="mb-3 inline-block rounded-full border border-purple-200 bg-purple-50 px-3 py-0.5 font-mono text-xs font-bold text-purple-600">
-                  {post.category}
-                </span>
-                <h3 className="mb-2 text-base font-bold text-gray-900">{post.title}</h3>
-                {post.excerpt && (
-                  <p className="mb-3 text-sm leading-relaxed text-gray-500">{post.excerpt}</p>
-                )}
-                <span className="font-mono text-xs text-gray-400">{post.date}</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <Link
-          href="/blog"
-          className="mt-8 inline-flex items-center gap-1 rounded-lg border border-purple-200 px-4 py-2 text-sm font-bold text-purple-600 transition hover:bg-purple-50"
-        >
-          → すべての記事を見る
-        </Link>
+    <div id="blog" className="flex flex-col gap-8 px-6 pb-16 sm:px-10 lg:px-20">
+      <div className="flex items-center gap-2">
+        <Zap className="fill-brand-500 text-brand-500 h-3.5 w-3.5" />
+        <span className="text-brand-500 text-xs font-bold tracking-[0.12em] uppercase">
+          Latest from the blog
+        </span>
       </div>
+
+      <div className="flex flex-col gap-4">
+        {posts.map((post) => (
+          <Link
+            key={post.slug}
+            href={`/blog/${post.slug}`}
+            className="bg-surface-0 flex items-center justify-between rounded-[20px] px-8 py-6 shadow-[0_20px_40px_-16px_rgba(16,14,24,0.16)] transition-transform hover:-translate-y-0.5"
+          >
+            <div className="flex flex-col gap-1">
+              <div className="text-ink-950 text-[17px] font-bold">{post.title}</div>
+              <div className="text-ink-600 text-[13px]">{post.date}</div>
+            </div>
+            <span className="bg-surface-950 flex h-10 w-10 flex-none items-center justify-center rounded-full text-lime-500">
+              <ArrowRight className="h-4 w-4" />
+            </span>
+          </Link>
+        ))}
+      </div>
+
+      <Link
+        href="/blog"
+        className="text-brand-500 hover:text-brand-700 inline-flex w-fit items-center gap-1.5 text-sm font-bold transition-colors"
+      >
+        すべての記事を見る
+        <ArrowRight className="h-3.5 w-3.5" />
+      </Link>
     </div>
   )
 }
