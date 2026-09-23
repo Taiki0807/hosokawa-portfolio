@@ -1,5 +1,6 @@
 import { Zap, ArrowRight } from 'lucide-react'
 import { profile } from '@/data'
+import Globe from './Globe'
 
 const chips: { label: string; top: string; left?: string; right?: string; rotate: string }[] = [
   { label: 'Next.js', top: '24px', left: '20px', rotate: '-rotate-6' },
@@ -51,12 +52,9 @@ const Hero = () => {
 
       <div className="relative flex h-[380px] w-[380px] flex-none items-center justify-center sm:h-[420px] sm:w-[460px]">
         <div className="absolute h-[380px] w-[380px] rounded-full bg-[#0a0913]" />
-        <img
-          src="/hero-globe.svg"
-          alt=""
-          className="hero-globe absolute h-[380px] w-[380px]"
-          aria-hidden="true"
-        />
+        <div className="absolute h-[380px] w-[380px]" aria-hidden="true">
+          <Globe />
+        </div>
         {chips.map((chip) => (
           <div
             key={chip.label}
