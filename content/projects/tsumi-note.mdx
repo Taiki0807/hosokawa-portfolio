@@ -1,0 +1,66 @@
+---
+title: つみノート
+description: ポモドーロタイマー・Markdownノート・間隔反復（FSRS）で学習を管理するアプリ。Web版のLPを公開中、iOS/iPadOS版とAPIは開発中。
+date: 2026-09-25
+readingTime: 5
+tags: [TanStack Start, TypeScript, Tailwind CSS, Cloudflare Workers, Expo, React Native]
+link: { label: 'サイトを見る', href: 'https://tsumi-note-web.tsumi-note-web.workers.dev/' }
+icon: /project-icons/tsumi-note.svg
+---
+
+## 概要
+
+資格試験・語学学習向けの学習管理アプリです。ポモドーロタイマー・Markdownノート・間隔反復（FSRS）アルゴリズムによる復習を1つにまとめています。現在はLP（Webサイト）を公開中で、iOS/iPadOSアプリと同期用APIを開発中です。
+
+## Web LP（公開済み）
+
+| 分類           | 技術                                             |
+| -------------- | ------------------------------------------------ |
+| フレームワーク | TanStack Start（TanStack Router + Vite）         |
+| 言語           | TypeScript 7（ネイティブコンパイラ）             |
+| スタイル・UI   | Tailwind CSS v4 / shadcn/ui（Radix UI）          |
+| 実行環境       | Cloudflare Workers（SSR）                        |
+| メール送信     | Resend（お問い合わせフォーム）                   |
+| 開発ツール     | Vite / Vitest + Testing Library / Lefthook / Bun |
+
+<Callout type="info">
+  先にFigmaでデザインを作り込み、それを忠実にコードへ再現しました。書き出し画像と実画面をセクションごとに並べて確認し、ページの高さも一致させています。Figmaの色変数もそのままTailwindのトークンにしています。
+</Callout>
+
+- **アプリ画面のモックアップをコードで描画**：画像を使わずHTMLとCSSで組み、390×844を基準に縮小表示。どの解像度でもぼやけず軽量です。
+- **エッジでSSR**：Cloudflare Workersで配信し、起動時間は16ms。無料枠の範囲で運用できます。
+- **品質を保つ仕組み**：フォーマット・lint・型検査を1コマンドで実行、テストは14件。入力チェックはブラウザとサーバーで共通、bot対策の隠し入力欄も設置。レスポンシブ・アクセシビリティにも対応。
+
+## モバイルアプリ（開発中）
+
+| 分類             | 技術                                                  |
+| ---------------- | ----------------------------------------------------- |
+| フレームワーク   | Expo（SDK 57）+ React Native 0.87 / Expo Router       |
+| スタイル         | NativeWind（LPと同じデザイントークン）                |
+| 端末内のDB       | expo-sqlite + Drizzle ORM                             |
+| 認証             | Better Auth（@better-auth/expo）+ expo-secure-store   |
+| 復習アルゴリズム | FSRS（ts-fsrs）                                       |
+| タイマー         | 開始・終了時刻から残り時間を計算 + expo-notifications |
+| ビルド・配布     | 手元のMacのXcodeでArchive → TestFlight                |
+
+<Callout type="success">
+  Ankiにも採用されているFSRS（間隔反復アルゴリズム）を使用。4段階評価（もう一度・難しい・普通・簡単）で次の復習日を自動計算します。データはまず端末のSQLiteに保存するので、ログインなしでも全機能がオフラインで使えます。
+</Callout>
+
+## 同期・認証API（開発中）
+
+| 分類                   | 技術                                       |
+| ---------------------- | ------------------------------------------ |
+| 実行環境・ルーティング | Cloudflare Workers + Hono                  |
+| 認証                   | Better Auth（Sign in with Apple / Google） |
+| DB                     | Cloudflare D1 + Drizzle ORM                |
+
+データはまずローカルDB（端末のSQLite）に保存する「ローカルファースト」の設計です。ローカルDBとサーバー（D1）はどちらもSQLite系なので、テーブル定義や型などDrizzleの共通部分は共有しつつ、DB接続・マイグレーション・同期処理はそれぞれ分離しています（React Native側のSQLiteドライバとCloudflare D1ではDrizzleの接続方法が異なるため）。アカウントを作成するとローカルDBのデータを外部DB（D1）へ登録し、以降は更新時刻・削除時刻をもとに差分だけを同期します。
+
+## 全体を通して
+
+- TypeScriptだけでWeb・アプリ・サーバーを構築し、型・入力チェック・FSRSの処理を共有
+- Cloudflare（Workers・D1）だけで運用し、コストを抑制
+- オフライン優先の設計で、アカウントなしでも使える
+- Figmaのデザイントークンを Web・アプリ両方で共有
+- 型検査・lint・テストをコミット前に自動実行

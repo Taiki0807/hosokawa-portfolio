@@ -96,6 +96,7 @@ export type ProjectFrontmatter = {
   readingTime: number
   tags: string[]
   link?: { label: string; href: string }
+  icon?: string
 }
 
 export type ProjectMeta = ProjectFrontmatter & { slug: string }

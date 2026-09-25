@@ -1,0 +1,156 @@
+---
+title: Minecraft Race Platform
+description: 複数人でエンダードラゴン討伐RTAを競うプラットフォーム。管理画面から試合を作成すると、自宅のk3sクラスタ上でMinecraftサーバーが動的に生成され、終了後は自動破棄されます。
+date: 2026-09-25
+readingTime: 10
+tags: [Next.js, Go, Kubernetes, Supabase, Tailscale]
+link: { label: 'サイトを見る', href: 'https://play.hosokawa-lab.dev/' }
+icon: 'lucide:box'
+---
+
+## 概要
+
+Minecraft Race Platformは、複数人でエンダードラゴン討伐RTAを競うプラットフォームです。管理者がWeb画面から試合を作成すると、自宅のKubernetes（k3s）クラスタ上でMinecraftサーバーが動的に立ち上がり、試合終了後は自動的に破棄されます。観戦者はライブで進捗やイベント（ネザー到達、ドラゴン討伐など）をリアルタイムに追えます。
+
+## アーキテクチャ
+
+![Minecraft Race Platform ネットワーク構成図](/project-images/minecraft-race-platform-network.png)
+
+```text
+Web
+Next.js 16
+  ├─ React 19 / TypeScript
+  ├─ Tailwind CSS v4 / shadcn/ui
+  └─ Supabase Auth / Postgres / RLS
+            ↓
+自宅サーバー
+Go Race Controller
+  ├─ ServiceAccount / RBAC
+  └─ Kubernetes API
+            ↓
+k3s / Race専用Worker
+  ├─ mc-router
+  ├─ Paper Minecraft Pods
+  ├─ 自作Paper Plugin
+  └─ local-path PVC
+
+Minecraft通信
+Client → VPS/Nginx → Tailscale → mc-router → Paper Pod
+```
+
+Web側（Next.js / Supabase）と自宅サーバー側（Go / Kubernetes / Minecraft）は完全に切り離されており、Tailscaleを介してのみ接続しています。
+
+## 技術スタック
+
+| 分類               | 採用技術                               | 主な用途                             |
+| ------------------ | -------------------------------------- | ------------------------------------ |
+| Webフレームワーク  | Next.js 16 App Router                  | 管理画面・観戦画面・BFF              |
+| フロントエンド     | React 19 / TypeScript                  | UIと画面ロジック                     |
+| スタイリング       | Tailwind CSS v4                        | レスポンシブなUI実装                 |
+| UIコンポーネント   | shadcn/ui（Base UI）                   | ダイアログ・メニュー・フォーム       |
+| アイコン・通知     | Lucide Icons / Sonner                  | アイコンとトースト通知               |
+| サーバー処理       | Route Handlers / Server Actions        | SupabaseとRace Controllerの呼び出し  |
+| リクエスト制御     | Next.js Proxy                          | 認証状態に応じたアクセス制御         |
+| バリデーション     | Zod                                    | APIレスポンス・フォーム入力の検証    |
+| 大整数処理         | json-bigint                            | Goのint64 Seedを精度欠落なく処理     |
+| データベース       | Supabase Postgres                      | ユーザー・大会・参加情報・履歴       |
+| 認証               | Supabase Auth                          | ログインとユーザー識別               |
+| 認可               | Supabase Row Level Security            | 参加者と管理者のDB権限分離           |
+| Race API           | Go                                     | 試合ライフサイクルとk3s制御          |
+| API方式            | REST API / JSON                        | Web・Paperプラグインとの通信         |
+| API認証            | Bearer Token / Kubernetes Secret       | 外部APIとプラグイン通信の保護        |
+| リアルタイム更新   | SSE                                    | ランキング・進捗・イベント更新       |
+| Minecraft          | Paper 1.21.9                           | プラグイン対応の試合サーバー         |
+| ゲーム連携         | Java 21 / Paper API                    | ゲーム内イベントの収集               |
+| プラグインビルド   | Gradle                                 | 自作Paperプラグインのビルド          |
+| Minecraftイメージ  | itzg/minecraft-server                  | コンテナ化したMinecraftサーバー      |
+| 仮想化             | Proxmox VE 9.1.2                       | k3sノード用VMの実行                  |
+| VM構築             | Terraform                              | Proxmox VMのIaC管理                  |
+| OS                 | Ubuntu 24.04.3                         | k3sノードのOS                        |
+| Kubernetes         | k3s v1.34.3+k3s1                       | MinecraftとControllerの実行基盤      |
+| コンテナランタイム | containerd 2.1.5-k3s1                  | Kubernetesコンテナ実行               |
+| パッケージ管理     | Helm                                   | Minecraft・Tailscaleなどの導入       |
+| Kubernetes権限     | ServiceAccount / RBAC                  | Race Controllerの操作範囲を制限      |
+| 動的リソース       | Deployment / Service / PVC / ConfigMap | 試合環境の生成・削除                 |
+| 永続ストレージ     | local-path PVC                         | Minecraftワールドの保存              |
+| 状態保存           | ConfigMap                              | 試合・イベント・進捗の復元           |
+| 内部ルーティング   | mc-router                              | ホスト名から試合Serviceへ振り分け    |
+| ゲーム公開経路     | VPS / Nginx Stream                     | Minecraft TCP通信の公開入口          |
+| VPN                | Tailscale / WireGuard                  | VPSと自宅k3s間の暗号化通信           |
+| DNS                | Cloudflare DNS                         | API・試合別ホスト名の管理            |
+| ネットワーク分離   | Proxmox vnet1 / 192.168.100.0/24       | 自宅サーバー用サブネット             |
+| Webホスティング    | Vercel                                 | Next.jsアプリの公開                  |
+| テスト             | Vitest / Testing Library               | ロジック・コンポーネント・操作テスト |
+
+特にアピールの中心になるのは、Next.jsとSupabaseによるWeb開発、Goによる Kubernetes制御、自作Paperプラグイン、分離サブネットとTailscaleを組み合わせた自宅プラットフォーム設計です。
+
+## 技術的なアピールポイント
+
+### 1. 試合ごとにMinecraft環境を自動生成
+
+単一のMinecraftサーバーを使い回すのではなく、試合単位で以下のKubernetesリソースを動的に作成します。
+
+- Deployment
+- Service
+- PVC
+- 接続先ホスト名
+- 大会IDなどの環境変数
+
+参加者ごとに独立した環境を提供でき、試合終了後の停止や削除までRace Controllerで管理できます。
+
+### 2. Kubernetes Operatorに近い制御をGoで実装
+
+Go APIは単なるCRUDではなく、ユーザーの操作をKubernetesリソースへ変換します。
+
+```text
+大会開始API
+  → Kubernetesリソース生成
+  → Pod起動確認
+  → 接続先発行
+  → RUNNINGへ状態更新
+```
+
+アプリケーションとインフラを連携させた、Platform Engineering寄りの実装です。
+
+### 3. MinecraftとWebをリアルタイム連携
+
+自作Paperプラグインで、次の情報を収集する設計です。
+
+- プレイヤーの参加・退出
+- 死亡
+- ネザー／エンドへの到達
+- Advancementの進行
+- ブレイズロッドなどの所持数
+- エンダードラゴン討伐
+- ゴール時間
+
+ゲーム内イベントを認証付きHTTPでGo APIへ送り、ライブ順位やイベント履歴へ反映します。
+
+### 4. 自宅環境を実用的なプラットフォームとして構築
+
+Proxmox上にk3sクラスタを構築し、Terraform、Helm、Kubernetesを組み合わせています。単にMinecraftを動かすだけではなく、Webサービスから動的にゲーム基盤を制御できる構成です。
+
+### 5. 自宅サーバーを安全に外部公開
+
+<Callout type="info">
+  k3sを直接インターネットへ公開せず、VPSと自宅環境をTailscaleで接続しています。公開部分と内部クラスタを分離した構成です。
+</Callout>
+
+```text
+インターネット
+  → Cloudflare DNS
+  → VPS・Nginx
+  → Tailscale
+  → 自宅k3s
+```
+
+### 6. 再起動後も試合状態を復元
+
+試合情報、イベント、進捗をConfigMapへ保存し、Race Controller再起動後も以下を復元できるところまで確認済みです。
+
+- 試合ステータス
+- イベント履歴
+- エンダードラゴン討伐状態
+- プレイヤー順位
+
+一時的なメモリ管理だけで終わらず、障害や再起動を考慮した設計になっています。

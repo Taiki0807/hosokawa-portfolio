@@ -6,6 +6,7 @@ import { getProjectBySlug, getAllProjectSlugs } from '@/lib/content'
 import { Callout } from '@/components/ui/Callout'
 import { CodePreview } from '@/components/ui/CodePreview'
 import { proseClassName } from '@/components/ui/prose'
+import { mdxOptions } from '@/lib/mdx'
 
 const mdxComponents = {
   Callout,
@@ -81,7 +82,7 @@ export default async function ProjectPage({ params }: Props) {
       </div>
 
       <div className={proseClassName}>
-        <MDXRemote source={content} components={mdxComponents} />
+        <MDXRemote source={content} components={mdxComponents} options={mdxOptions} />
       </div>
     </article>
   )

@@ -1,0 +1,75 @@
+---
+title: やりくり献立
+description: 1週間の献立計画・買い物リスト・レシピ・食材在庫をまとめて管理するアプリ。App Storeで公開中。
+date: 2026-09-25
+readingTime: 5
+tags: [Expo, React Native, TypeScript, Supabase, TanStack Query]
+link: { label: 'サイトを見る', href: 'https://yarikuri-kondate.hosokawa-lab.dev/' }
+icon: /project-icons/yarikuri-kondate.png
+---
+
+## 概要
+
+1週間の献立計画、買い物リスト、レシピ、食材の在庫をまとめて管理するアプリです。設計・実装からApple審査への提出、公開までを1人で行いました。
+
+**App Storeで公開中**：[やりくり献立](https://apps.apple.com/jp/app/%E3%82%84%E3%82%8A%E3%81%8F%E3%82%8A%E7%8C%AE%E7%AB%8B/id6807749575)
+
+## 技術スタック
+
+| レイヤー         | 技術                                                                                      |
+| ---------------- | ----------------------------------------------------------------------------------------- |
+| フレームワーク   | Expo SDK 57 / React Native 0.86 / React 19.2                                              |
+| 言語             | TypeScript 6（strict）                                                                    |
+| ルーティング     | Expo Router（ファイルベース、Typed Routes、NativeTabs）                                   |
+| コンパイラ       | React Compiler                                                                            |
+| サーバー状態管理 | TanStack Query v5                                                                         |
+| BaaS             | Supabase（Auth / Postgres / RLS / Edge Functions）                                        |
+| サーバーレス     | Supabase Edge Functions（Deno）                                                           |
+| アニメーション   | Reanimated 4 + Worklets                                                                   |
+| ネイティブAPI    | expo-secure-store, expo-haptics, expo-image, expo-symbols (SF Symbols), expo-glass-effect |
+| 暗号化           | aes-js（AES-256-CTR）+ react-native-get-random-values                                     |
+| ビルド・配信     | Xcode（Mac上でローカルビルド）→ App Store Connect                                         |
+| 静的解析         | ESLint 9（eslint-config-expo）                                                            |
+
+## App Storeで公開済み
+
+<Callout type="success">
+  試作で終わらせず、App
+  Storeの審査を通して公開しました。ネイティブプロジェクトをXcodeで直接ビルドし、署名・Archive・アップロードまで自分で行っています。
+</Callout>
+
+審査の要件にも対応しています。
+
+- アプリ内からアカウントを削除できる
+- 権限の利用目的（ローカルネットワークなど）を日本語で説明
+
+## セキュリティを意識した設計
+
+- **セッションの暗号化保存**：SecureStoreは1値2048バイトまでの制限があり、Supabaseのセッションはそれを超えます。そこでAES-256の鍵だけをKeychainに置き、暗号化したセッションをAsyncStorageに保存しています。
+- **全テーブルにRLSを設定**：`user_id = auth.uid()` を条件に、select/insert/update/deleteのポリシーを1つずつ定義しています。
+- **アカウント削除はEdge Functionで実行**：service roleキーはアプリに含めず、サーバー側で利用者本人のJWTを確認してから削除します。関連データは `on delete cascade` でまとめて消えます。
+
+## 使い始めやすい認証の流れ
+
+- ゲストとして開始（Anonymous Sign-In）でき、あとからメールアドレスを紐づけて本登録できます。
+- アプリがフォアグラウンドに戻ったときにセッションを更新し、JWT関連の問題を防いでいます。
+- ディープリンク（`kitchenjournal://`）でメール確認後にアプリへ戻ります。
+
+## 独自のドメインロジック
+
+- **食材の使い回しスコア**：今週の献立ですでに使っている食材を多く含むレシピを優先し、食材を余らせにくくします。
+- **賞味期限アラート**：期限3日以内の在庫を警告し、その食材を使うレシピを提示します。
+- **材料費の見積もり・予算管理**：在庫の単価から原価を推定し、月の予算内に収まるように管理できます。
+- 買い物リストの自動集計、YouTubeレシピのサムネイル表示も備えています。
+
+## 保守しやすい構成
+
+- 機能ごとに分割（`features/{meal-plan,recipes,inventory,shopping,settings}`）。各機能はSupabaseとの通信（`api.ts`）、Queryフック（`use-*.ts`）、型、純粋関数のロジックに分かれています。
+- Route Groupsの `(auth)` と `(app)` で、未ログイン時とログイン後の画面を分けています。
+- DBの変更はSQLマイグレーションで管理しています。
+
+## ネイティブらしいUI/UX
+
+- NativeTabsで本物のネイティブタブバーを使い、SF Symbolsを表示。
+- iOSではPlatformColor（UIKitのセマンティックカラー）を使用。
+- ハプティクスや `borderCurve: 'continuous'` など、細部までAppleのヒューマンインターフェースガイドラインに沿った作り込みをしています。
