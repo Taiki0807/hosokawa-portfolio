@@ -6,14 +6,25 @@ import Project from '@/components/Project/Project'
 import Blog from '@/components/Blog/Blog'
 import Contact from '@/components/Contact/Contact'
 import Footer from '@/components/Footer/Footer'
+import LearningSection from '@/components/learning/LearningSection'
+import GoalsSection from '@/components/goals/GoalsSection'
+import ReviewSection from '@/components/review/ReviewSection'
+import {
+  getSkillsAndCertifications,
+  toCertificationItems,
+  toSkillItems,
+} from '@/lib/skills/queries'
 
-const Home = () => {
+const Home = async () => {
+  const { skills, certifications } = await getSkillsAndCertifications()
   return (
     <div className="overflow-hidden">
       <Hero />
-      <Skill />
+      <Skill skills={toSkillItems(skills)} />
       <About />
-      <Certifications />
+      <LearningSection goals={<GoalsSection />} />
+      <ReviewSection />
+      <Certifications certifications={toCertificationItems(certifications)} />
       <Project />
       <Blog />
       <Contact />

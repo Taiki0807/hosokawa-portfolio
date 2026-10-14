@@ -1,5 +1,5 @@
 import { Zap, Code2 } from 'lucide-react'
-import { skills } from '@/data'
+import type { Skill as SkillItem } from '@/data'
 
 type NodePos = {
   /** SVGのviewBox座標系(640x520)での位置。<line>の端点に使う */
@@ -14,7 +14,7 @@ type NodePos = {
 }
 
 // ハブ座標とリング半径は元デザイン(orbit-ring-inner/outer)と同じ値。
-// スキル数はdata.tsの増減に追従するよう、円周上に均等配置で自動計算する。
+// スキル数の増減に追従するよう、円周上に均等配置で自動計算する。
 const HUB = { x: 300, y: 250 }
 
 const VIEW_W = 640
@@ -42,13 +42,13 @@ function ringPositions(count: number, radius: number, startAngleDeg: number): No
   })
 }
 
-const coreSkills = skills.filter((s) => s.hasExperience)
-const outerSkills = skills.filter((s) => !s.hasExperience)
+const Skill = ({ skills }: { skills: SkillItem[] }) => {
+  const coreSkills = skills.filter((s) => s.hasExperience)
+  const outerSkills = skills.filter((s) => !s.hasExperience)
 
-const corePositions = ringPositions(coreSkills.length, 160, -75)
-const outerPositions = ringPositions(outerSkills.length, 235, -68)
+  const corePositions = ringPositions(coreSkills.length, 160, -75)
+  const outerPositions = ringPositions(outerSkills.length, 235, -68)
 
-const Skill = () => {
   return (
     <div id="skills" className="px-6 pb-16 sm:px-10 lg:px-20">
       <div className="bg-surface-950 relative flex flex-col items-center gap-14 overflow-hidden rounded-[28px] p-6 sm:p-10 lg:flex-row lg:justify-between lg:p-16">
