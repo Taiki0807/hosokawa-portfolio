@@ -20,6 +20,12 @@ export const mockProvider: AiProvider = {
           evidence: [{ label: '学習ログ', href: '/#learning' }],
         },
         {
+          tag: '技術',
+          title: '【モック】手を動かして確かめている',
+          text: '【モック】技術の目線のコメントです。',
+          evidence: [],
+        },
+        {
           tag: '期待',
           title: '【モック】説明する機会を増やす',
           text: '【モック】伸びしろについてのコメントです。',

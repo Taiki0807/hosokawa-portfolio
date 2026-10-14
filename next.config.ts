@@ -4,6 +4,8 @@ import type { NextConfig } from 'next'
 const r2 = process.env.R2_PUBLIC_BASE_URL ? new URL(process.env.R2_PUBLIC_BASE_URL) : null
 
 const nextConfig: NextConfig = {
+  // e2e 用サーバーは別の出力先を使う（開発サーバーと同時に動かせるように）
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   images: {
     remotePatterns: r2
       ? [
