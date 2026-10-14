@@ -12,6 +12,10 @@ export const NavLinks = [
     href: '/#skills',
   },
   {
+    name: 'Learning',
+    href: '/#learning',
+  },
+  {
     name: 'Projects',
     href: '/#projects',
   },
@@ -24,4 +28,9 @@ export const NavLinks = [
 export const ContactLink = {
   name: 'Contact',
   href: '/#contact',
+}
+
+export const LoginLink = {
+  name: 'Login',
+  href: '/login',
 }

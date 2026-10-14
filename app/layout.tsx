@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Noto_Sans_JP, DM_Mono } from 'next/font/google'
 import './globals.css'
 import ResponsiveNav from '@/components/Home/NavBar/ResponsiveNav'
+import Providers from '@/components/Providers'
 import { profile } from '@/data'
 
 const notoSansJP = Noto_Sans_JP({
@@ -40,8 +41,10 @@ export default function RootLayout({
   return (
     <html lang="ja" className={`${notoSansJP.variable} ${dmMono.variable} h-full antialiased`}>
       <body className="flex min-h-full flex-col">
-        <ResponsiveNav />
-        {children}
+        <Providers>
+          <ResponsiveNav />
+          {children}
+        </Providers>
       </body>
     </html>
   )

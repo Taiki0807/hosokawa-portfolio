@@ -1,12 +1,13 @@
-import { NavLinks, ContactLink } from '@/Constant/Constant'
+import { NavLinks, ContactLink, LoginLink } from '@/Constant/Constant'
 import { X } from 'lucide-react'
 import Link from 'next/link'
 
 type Props = {
   showNav: boolean
   closeNav: () => void
+  isOwner: boolean
 }
-const MobileNav = ({ showNav, closeNav }: Props) => {
+const MobileNav = ({ showNav, closeNav, isOwner }: Props) => {
   const sidebarOpenClose = showNav ? 'translate-x-0' : 'translate-x-[-100%]'
   return (
     <div>
@@ -33,6 +34,13 @@ const MobileNav = ({ showNav, closeNav }: Props) => {
           className="text-ink-950 mt-4 ml-8 flex w-fit items-center gap-2 rounded-2xl bg-lime-500 px-6 py-3 text-[13px] font-bold tracking-[0.06em] uppercase"
         >
           {ContactLink.name}
+        </Link>
+        <Link
+          href={isOwner ? '/admin' : LoginLink.href}
+          onClick={closeNav}
+          className="text-ink-inverse-50 ml-8 w-fit text-[13px] font-bold tracking-[0.06em] underline"
+        >
+          {isOwner ? '管理画面' : LoginLink.name}
         </Link>
         <X
           onClick={closeNav}

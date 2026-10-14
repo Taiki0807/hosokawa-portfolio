@@ -19,6 +19,23 @@
   --color-brand-700: #342c7a;
 
   --color-lime-500: #cbeb4d;
+
+  /* 学習ログ・管理画面用に追加したトークン（既存のトークンは変更しない） */
+  --color-ink-700: #3d3a52;
+  --color-lime-ink: #5c6a12;
+  --color-brand-50: #f1effc;
+  --color-brand-100: #ece9fd;
+  --color-brand-150: #e9e6fa;
+  --color-danger-600: #b3261e;
+  --color-heat-0: #1f1c36;
+  --color-heat-1: #3b3390;
+  --color-heat-2: #5b4fe0;
+  --color-heat-3: #a79ff2;
+  --color-heat-4: #cbeb4d;
+
+  --shadow-soft: 0 24px 48px -28px rgba(16, 14, 24, 0.2);
+  --shadow-float: 0 30px 60px -30px rgba(16, 14, 24, 0.28);
+  --shadow-bubble: 0 28px 54px -30px rgba(16, 14, 24, 0.35);
 }
 
 :root {
@@ -149,4 +166,45 @@ body {
   outline: 2px solid var(--color-brand-500);
   outline-offset: 1px;
   border-color: var(--color-brand-500);
+}
+
+/* ---- 学習ログ・管理画面（追加分） ---- */
+.hm-tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translate(-50%, 3px);
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  background: var(--color-ink-inverse-50);
+  color: var(--color-ink-950);
+  font-size: 12px;
+  font-weight: 700;
+  padding: 7px 11px;
+  border-radius: 8px;
+  box-shadow: 0 14px 28px -10px rgba(0, 0, 0, 0.5);
+  transition:
+    opacity 0.14s ease,
+    transform 0.14s ease;
+  z-index: 30;
+}
+.hm-cell:hover .hm-tip,
+.hm-cell:focus-visible .hm-tip {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+.hm-cell:hover,
+.hm-cell:focus-visible {
+  outline: 2px solid rgba(245, 244, 251, 0.7);
+  outline-offset: 0;
+  z-index: 20;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hm-tip,
+  .log-row,
+  .motion-safe-transition {
+    transition: none !important;
+  }
 }

@@ -1,13 +1,17 @@
 import Logo from '@/components/Helper/Logo'
-import { NavLinks, ContactLink } from '@/Constant/Constant'
+import { NavLinks, ContactLink, LoginLink } from '@/Constant/Constant'
 import { MenuIcon } from 'lucide-react'
 import Link from 'next/link'
+import AccountMenu from './AccountMenu'
+import { GitHubIcon } from '@/components/ui/icons'
 
 type Props = {
   openNav: () => void
+  owner: { login: string; image?: string | null } | null
+  openInquiries: number | null
 }
 
-const Nav = ({ openNav }: Props) => {
+const Nav = ({ openNav, owner, openInquiries }: Props) => {
   return (
     <div className="border-surface-200 bg-surface-0 sticky top-0 z-50 w-full border-b">
       <div className="mx-auto flex items-center justify-between px-6 py-5 sm:px-10 lg:px-20">
@@ -30,6 +34,19 @@ const Nav = ({ openNav }: Props) => {
           >
             {ContactLink.name}
           </Link>
+          {owner ? (
+            <div className="hidden lg:block">
+              <AccountMenu login={owner.login} image={owner.image} openInquiries={openInquiries} />
+            </div>
+          ) : (
+            <Link
+              href={LoginLink.href}
+              className="bg-surface-950 text-ink-inverse-50 border-surface-950 hidden items-center gap-2 rounded-2xl border-[1.5px] px-[22px] py-[13px] text-[13px] font-bold tracking-[0.06em] uppercase transition-opacity hover:opacity-85 lg:inline-flex"
+            >
+              <GitHubIcon />
+              {LoginLink.name}
+            </Link>
+          )}
           <MenuIcon onClick={openNav} className="text-ink-950 h-7 w-7 cursor-pointer lg:hidden" />
         </div>
       </div>

@@ -15,17 +15,15 @@ async function addEntry(
     .insert(learningEntries)
     .values({ date, status, title: date, noteMd: status === 'published' ? '# note' : '' })
     .returning({ id: learningEntries.id })
-  await db
-    .insert(learningSessions)
-    .values(
-      sessions.map(([tag, minutes], sort) => ({
-        entryId: e.id,
-        tag,
-        minutes,
-        sort,
-        memo: `${tag}のメモ`,
-      }))
-    )
+  await db.insert(learningSessions).values(
+    sessions.map(([tag, minutes], sort) => ({
+      entryId: e.id,
+      tag,
+      minutes,
+      sort,
+      memo: `${tag}のメモ`,
+    }))
+  )
 }
 
 beforeEach(async () => {
