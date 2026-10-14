@@ -34,6 +34,27 @@ const TOPICS: Record<string, string[]> = {
 }
 const TAGS = Object.keys(TOPICS)
 
+const sampleNote = (memo: string) =>
+  [
+    '## 学んだこと',
+    '',
+    `[サンプル] ${memo}。`,
+    '',
+    '```yaml',
+    'Outputs:',
+    '  VpcId:',
+    '    Value: !Ref Vpc',
+    '```',
+    '',
+    '> [!TIP]',
+    '> [サンプル] Export したスタックは、参照されている間は削除できません。',
+    '',
+    '## 次にやること',
+    '',
+    '- [サンプル] 図に描いて説明できるようにする',
+    '- [サンプル] CI で順番にデプロイしてみる',
+  ].join('\n')
+
 async function main() {
   const today = todayJst()
   await db.batch([
@@ -60,10 +81,7 @@ async function main() {
         status: rand() < 0.08 ? 'private' : 'published',
         reportText: `[サンプル] ${sessions.map((s) => s.memo).join('。')}。`,
         reportAiPolished: rand() < 0.5,
-        noteMd:
-          rand() < 0.2
-            ? `## 学んだこと\n\n[サンプル] ${sessions[0].memo}。\n\n\`\`\`ts\nconst sample = true\n\`\`\`\n`
-            : '',
+        noteMd: rand() < 0.2 ? sampleNote(sessions[0].memo) : '',
       })
       .returning({ id: schema.learningEntries.id })
     await db
