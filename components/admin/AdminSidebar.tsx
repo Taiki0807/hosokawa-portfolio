@@ -46,7 +46,7 @@ export default function AdminSidebar({ openInquiries }: { openInquiries: number 
   return (
     <nav
       aria-label="管理メニュー"
-      className="bg-surface-0 border-surface-200 flex flex-none gap-0.5 overflow-x-auto border-b px-4 py-3 lg:sticky lg:top-[60px] lg:h-[calc(100vh-60px)] lg:w-[260px] lg:flex-col lg:overflow-y-auto lg:border-r lg:border-b-0 lg:px-5 lg:pt-6 lg:pb-8"
+      className="bg-surface-0 border-surface-200 relative flex flex-none gap-0.5 overflow-x-auto border-b px-4 py-3 lg:sticky lg:top-[60px] lg:h-[calc(100vh-60px)] lg:w-[260px] lg:flex-col lg:overflow-y-auto lg:border-r lg:border-b-0 lg:px-5 lg:pt-6 lg:pb-8"
     >
       {GROUPS.map((group, gi) => (
         <div key={gi} className="flex flex-none gap-0.5 lg:flex-col">
