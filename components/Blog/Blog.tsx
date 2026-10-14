@@ -1,9 +1,9 @@
 import Link from 'next/link'
 import { Zap, ArrowRight } from 'lucide-react'
-import { getAllPosts } from '@/lib/content'
+import { getMergedPosts } from '@/lib/posts'
 
-const Blog = () => {
-  const posts = getAllPosts().slice(0, 1)
+const Blog = async () => {
+  const posts = (await getMergedPosts()).slice(0, 1)
 
   if (posts.length === 0) return null
 

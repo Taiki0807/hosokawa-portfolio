@@ -22,7 +22,8 @@ export const getSkillsAndCertifications = unstable_cache(readSkillsAndCertificat
 export function toSkillItems(rows: (typeof skills.$inferSelect)[]): Skill[] {
   return rows.map((r) => ({
     name: r.name,
-    description: r.description,
+    // 経験年数は本人が入力したときだけ表示する
+    description: r.years != null ? `${r.description}（経験${r.years}年）` : r.description,
     hasExperience: r.category !== 'learning',
   }))
 }

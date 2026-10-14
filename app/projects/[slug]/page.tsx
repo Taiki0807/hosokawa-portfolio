@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation'
+import DbPostArticle from '@/components/posts/DbPostArticle'
+import { getPublishedDbPost } from '@/lib/posts'
 import Link from 'next/link'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { ArrowLeft, ArrowRight } from 'lucide-react'
@@ -28,7 +30,12 @@ export default async function ProjectPage({ params }: Props) {
   try {
     project = getProjectBySlug(slug)
   } catch {
-    notFound()
+    // MDX にない slug は、管理画面から書いた記事（D1）を探す
+    const dbPost = await getPublishedDbPost('project', slug)
+    if (!dbPost) notFound()
+    return (
+      <DbPostArticle post={dbPost} backHref="/projects" backLabel="Projects" eyebrow="Project" />
+    )
   }
 
   const { frontmatter, content } = project

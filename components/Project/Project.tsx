@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Zap, FolderKanban, Box } from 'lucide-react'
-import { getAllProjects } from '@/lib/content'
+import { getMergedProjects } from '@/lib/posts'
 
 // icon frontmatterで "lucide:<name>" と書いた場合に使うアイコン一覧。
 // 各プロジェクト自身のロゴで使われているlucideアイコンをそのまま再現する用途。
@@ -9,8 +9,8 @@ const lucideIcons: Record<string, typeof Box> = {
   box: Box,
 }
 
-const Project = () => {
-  const projects = getAllProjects()
+const Project = async () => {
+  const projects = await getMergedProjects()
 
   if (projects.length === 0) return null
 
