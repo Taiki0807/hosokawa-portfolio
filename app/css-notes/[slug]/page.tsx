@@ -1,4 +1,6 @@
 import { notFound } from 'next/navigation'
+import DbPostArticle from '@/components/posts/DbPostArticle'
+import { getPublishedDbPost } from '@/lib/posts'
 import Link from 'next/link'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { ArrowLeft } from 'lucide-react'
@@ -30,7 +32,17 @@ export default async function NotePage({ params }: Props) {
   try {
     note = getNoteBySlug(slug)
   } catch {
-    notFound()
+    // MDX にない slug は、管理画面から書いた記事（D1）を探す
+    const dbPost = await getPublishedDbPost('css-note', slug)
+    if (!dbPost) notFound()
+    return (
+      <DbPostArticle
+        post={dbPost}
+        backHref="/css-notes"
+        backLabel="CSS Notes"
+        eyebrow="CSS Notes"
+      />
+    )
   }
 
   const { frontmatter, content } = note

@@ -1,8 +1,8 @@
 import Link from 'next/link'
-import { getAllNotes } from '@/lib/content'
+import { getMergedNotes } from '@/lib/posts'
 
-export default function CssNotesPage() {
-  const notes = getAllNotes()
+export default async function CssNotesPage() {
+  const notes = await getMergedNotes()
 
   return (
     <div>

@@ -1,7 +1,8 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Zap, FolderKanban, Box } from 'lucide-react'
-import { getAllProjects } from '@/lib/content'
+import { getMergedProjects } from '@/lib/posts'
+import { isAllowedImageUrl } from '@/lib/r2'
 
 // icon frontmatterで "lucide:<name>" と書いた場合に使うアイコン一覧。
 // 各プロジェクト自身のロゴで使われているlucideアイコンをそのまま再現する用途。
@@ -9,8 +10,8 @@ const lucideIcons: Record<string, typeof Box> = {
   box: Box,
 }
 
-const Project = () => {
-  const projects = getAllProjects()
+const Project = async () => {
+  const projects = await getMergedProjects()
 
   if (projects.length === 0) return null
 
@@ -40,7 +41,7 @@ const Project = () => {
                     </div>
                   ) : project.icon ? (
                     <div className="relative flex h-20 w-20 items-center justify-center rounded-2xl bg-white shadow-[0_12px_24px_-12px_rgba(16,14,24,0.25)]">
-                      {project.icon.startsWith('/') ? (
+                      {project.icon.startsWith('/') || isAllowedImageUrl(project.icon) ? (
                         <Image
                           src={project.icon}
                           alt=""

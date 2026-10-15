@@ -1,12 +1,14 @@
-import { NavLinks, ContactLink } from '@/Constant/Constant'
+import { NavLinks, ContactLink, LoginLink } from '@/Constant/Constant'
 import { X } from 'lucide-react'
 import Link from 'next/link'
+import SignOutButton from '@/components/ui/SignOutButton'
 
 type Props = {
   showNav: boolean
   closeNav: () => void
+  isOwner: boolean
 }
-const MobileNav = ({ showNav, closeNav }: Props) => {
+const MobileNav = ({ showNav, closeNav, isOwner }: Props) => {
   const sidebarOpenClose = showNav ? 'translate-x-0' : 'translate-x-[-100%]'
   return (
     <div>
@@ -34,6 +36,16 @@ const MobileNav = ({ showNav, closeNav }: Props) => {
         >
           {ContactLink.name}
         </Link>
+        <Link
+          href={isOwner ? '/admin' : LoginLink.href}
+          onClick={closeNav}
+          className="text-ink-inverse-50 ml-8 w-fit text-[13px] font-bold tracking-[0.06em] underline"
+        >
+          {isOwner ? '管理画面' : LoginLink.name}
+        </Link>
+        {isOwner ? (
+          <SignOutButton className="text-ink-inverse-400 ml-8 w-fit text-left text-[13px] font-bold tracking-[0.06em] underline hover:text-white" />
+        ) : null}
         <X
           onClick={closeNav}
           className="text-ink-inverse-50 absolute top-5 right-6 h-6 w-6 cursor-pointer sm:h-8 sm:w-8"

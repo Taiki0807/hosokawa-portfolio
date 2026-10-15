@@ -15,6 +15,8 @@ type FormState = {
   email: string
   subject: string
   message: string
+  // スパム対策のハニーポット（人には見えない欄。入力があれば送信を破棄する）
+  website: string
 }
 
 const initialState: FormState = {
@@ -22,6 +24,7 @@ const initialState: FormState = {
   email: '',
   subject: '',
   message: '',
+  website: '',
 }
 
 const Contact = () => {
@@ -82,9 +85,21 @@ const Contact = () => {
             つくりましょう。
           </div>
           <p className="text-ink-inverse-400 max-w-sm text-[15px] leading-[1.7]">
-            お仕事のご相談・カジュアルなご連絡、お気軽にどうぞ。下記フォームまたは直接のご連絡先からお待ちしています。
+            記事の感想や技術の話題など、カジュアルなご連絡をお気軽にどうぞ。下記フォームまたは直接のご連絡先からお待ちしています。
           </p>
           <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-3.5">
+            <div aria-hidden="true" className="absolute -left-[9999px] h-px w-px overflow-hidden">
+              <label htmlFor="cf-website">Website</label>
+              <input
+                id="cf-website"
+                name="website"
+                type="text"
+                tabIndex={-1}
+                autoComplete="off"
+                value={form.website}
+                onChange={handleChange}
+              />
+            </div>
             <div className="flex flex-col gap-3.5 sm:flex-row">
               <div className="flex-1">
                 <label
@@ -138,7 +153,7 @@ const Contact = () => {
                 required
                 value={form.subject}
                 onChange={handleChange}
-                placeholder="ご相談内容について"
+                placeholder="お問い合わせの件名"
               />
             </div>
             <div>
@@ -156,7 +171,7 @@ const Contact = () => {
                 rows={4}
                 value={form.message}
                 onChange={handleChange}
-                placeholder="お仕事のご相談内容など"
+                placeholder="記事の感想やご質問など"
               />
             </div>
             <button

@@ -1,0 +1,1 @@
+ALTER TABLE `goal` ADD `study_tags` text DEFAULT '[]' NOT NULL;

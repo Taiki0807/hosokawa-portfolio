@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { Zap } from 'lucide-react'
-import { certifications } from '@/data'
+import type { Certification } from '@/data'
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -14,7 +14,7 @@ function tierOf(name: string) {
   return /professional/i.test(name) ? 'Professional' : 'Associate'
 }
 
-const Certifications = () => {
+const Certifications = ({ certifications }: { certifications: Certification[] }) => {
   if (certifications.length === 0) return null
 
   return (
