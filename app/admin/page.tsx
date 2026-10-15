@@ -11,7 +11,7 @@ export default async function AdminOverviewPage() {
 
   const stats: [number, string, string][] = [
     [o.currentStreak, '日', '現在の連続記録'],
-    [o.monthStudyDays, '日', '今月の学習日数'],
+    [o.monthStudyDays, '日', '今月の記録日数'],
     [o.draftCount, '件', '下書き'],
     [o.publishedCount, '件', '公開中の記録'],
   ]
@@ -30,7 +30,7 @@ export default async function AdminOverviewPage() {
             TODAY {formatSlash(o.today)}
           </span>
           <span className="text-ink-inverse-50 text-[22px] font-black sm:text-[26px]">
-            {recordedToday ? '今日の学習は記録済みです' : '今日の学習は、まだ記録していません'}
+            {recordedToday ? '今日の記録は済んでいます' : '今日は、まだ記録していません'}
           </span>
           <span className="text-brand-200 text-[13px]">
             連続記録 {o.currentStreak}日

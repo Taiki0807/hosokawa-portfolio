@@ -118,7 +118,7 @@ async function DomainBreakdown() {
   return (
     <div className="bg-surface-0 border-surface-200 flex flex-col gap-3.5 rounded-3xl border px-6 py-6 shadow-[0_28px_54px_-30px_rgba(16,14,24,0.25)] sm:px-[30px]">
       <div className="flex flex-wrap items-baseline justify-between gap-2">
-        <h3 className="text-ink-950 text-base font-black">学習時間から見た技術領域</h3>
+        <h3 className="text-ink-950 text-base font-black">記録時間から見た技術領域</h3>
         <span className="text-ink-600 text-xs font-bold">
           過去1年・合計{Math.round(minutesToHours(all))}時間
         </span>
@@ -189,7 +189,7 @@ export default async function ReviewSection() {
               <Bubble key={c.id} comment={c} />
             ))}
             <p className="text-ink-600 text-xs leading-[1.9]">
-              根拠にしたデータ：学習ログ／詳細ノート／成果物（Projects・Blog）。AIが記録にないことを書き足さないよう、根拠の記録とあわせて本人が確認しています。
+              根拠にしたデータ：学習・開発ログ／詳細ノート／成果物（Projects・Blog）。AIが記録にないことを書き足さないよう、根拠の記録とあわせて本人が確認しています。
             </p>
           </>
         ),
@@ -220,7 +220,7 @@ export default async function ReviewSection() {
             eyebrow="Review"
             title={<span id="review-title">第三者の目線で見た、わたしの強み</span>}
             titleClassName="text-[30px] leading-[1.25] sm:text-[40px]"
-            description="自分では言葉にしづらい強みを、学習ログと成果物をもとに、AIに第三者の目線でまとめてもらいました。各コメントには、根拠になった記録へのリンクが付いています。"
+            description="自分では言葉にしづらい強みを、学習・開発ログと成果物をもとに、AIに第三者の目線でまとめてもらいました。各コメントには、根拠になった記録へのリンクが付いています。"
           />
           {/* 注意書きは必ず表示する（設定や props で消せない） */}
           <ul className="mt-1 flex flex-wrap gap-2" aria-label="このレビューについて">

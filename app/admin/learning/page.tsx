@@ -45,7 +45,7 @@ export default async function EntriesPage({ searchParams }: Props) {
       <PageHeader
         eyebrow="Entries"
         title="記録一覧"
-        description="学習の記録を検索・編集・公開管理します。"
+        description="学習・開発の記録を検索・編集・公開管理します。"
         action={
           <Link href="/admin/learning/new" className={btnPrimary}>
             ＋ 記録する

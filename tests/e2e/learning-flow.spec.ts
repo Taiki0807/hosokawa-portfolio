@@ -13,7 +13,7 @@ test('記録 → AI整形 → 確認 → 公開 → 公開ページに AI整形�
     .fill('## 学んだこと\n\n> [!TIP]\n> ルートテーブルを先に決める')
 
   await page.getByRole('button', { name: 'AIで整える' }).first().click()
-  const report = page.getByLabel('学習レポート（編集できます）')
+  const report = page.getByLabel('日報（編集できます）')
   await expect(report).toHaveValue(/【モック整形】/)
 
   // AI の文章は、確認のチェックを入れるまで公開できない

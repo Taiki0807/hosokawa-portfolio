@@ -48,8 +48,8 @@ export default function LearningExplorer({ data, goals }: Props) {
             </svg>
             <dl className="relative grid grid-cols-2 gap-x-8 gap-y-6 border-b border-white/10 pb-8 lg:flex lg:gap-[72px]">
               {[
-                ['学習した日', data.stats.studyDays, '日'],
-                ['合計学習時間', data.stats.hours, '時間'],
+                ['記録した日', data.stats.studyDays, '日'],
+                ['合計時間', data.stats.hours, '時間'],
                 ['現在の連続記録', data.stats.currentStreak, '日'],
                 ['最長の連続記録', data.stats.longestStreak, '日'],
               ].map(([label, value, unit]) => (
@@ -74,7 +74,7 @@ export default function LearningExplorer({ data, goals }: Props) {
             </div>
             <div className="relative mt-6 flex flex-wrap items-center justify-between gap-3">
               <span className="text-ink-inverse-400 text-xs">
-                1マス = 1日 ・ 色は学習時間の長さ
+                1マス = 1日 ・ 色はその日の時間の長さ
               </span>
               <div className="text-ink-inverse-400 flex items-center gap-[7px] text-xs font-bold">
                 0分
@@ -192,7 +192,7 @@ export default function LearningExplorer({ data, goals }: Props) {
             {data.topics.length > 0 ? (
               <section className="bg-surface-0 border-surface-200 flex flex-col gap-4 rounded-3xl border px-6 py-7 shadow-[var(--shadow-soft)] sm:px-8">
                 <div className="flex items-baseline justify-between">
-                  <h3 className="text-ink-950 text-base font-black">学習トピック</h3>
+                  <h3 className="text-ink-950 text-base font-black">トピック</h3>
                   <span className="text-ink-600 text-[11px] font-bold">過去1年・時間</span>
                 </div>
                 <ul className="flex flex-col gap-4">
@@ -224,8 +224,7 @@ export default function LearningExplorer({ data, goals }: Props) {
                 className="border-ink-600 text-ink-950 flex items-center justify-between gap-3 rounded-2xl border-[1.5px] border-dashed px-[22px] py-4 text-[13px] font-bold"
               >
                 <span>
-                  今日の学習を記録する{' '}
-                  <span className="text-ink-600 font-medium">（管理者用）</span>
+                  今日の記録を書く <span className="text-ink-600 font-medium">（管理者用）</span>
                 </span>
                 <span aria-hidden="true">→</span>
               </Link>

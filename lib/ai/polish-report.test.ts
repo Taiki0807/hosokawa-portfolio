@@ -51,7 +51,7 @@ describe('polishReport', () => {
   it('時間を書き換えた出力は使わない', async () => {
     await expect(
       polishReport(provider('AWSを120分学習した。'), input, { tone: 'desu', length: 'mid' })
-    ).rejects.toThrow('学習時間')
+    ).rejects.toThrow('時間（分）')
   })
   it('問題なければ文章を返す', async () => {
     await expect(

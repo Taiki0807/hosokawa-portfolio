@@ -177,7 +177,7 @@ export default function LearningForm({
 
         <fieldset className="flex flex-col gap-4">
           <legend className={labelClass}>
-            学習した内容{' '}
+            やったこと{' '}
             <span className="text-ink-600 font-medium">
               （タグごとに1行。合計 {totalMinutes}分）
             </span>
@@ -212,7 +212,7 @@ export default function LearningForm({
                     htmlFor={`lf-min-${i}`}
                     className="text-ink-700 mb-1.5 block text-[11px] font-bold"
                   >
-                    学習時間（分）
+                    時間（分）
                   </label>
                   <input
                     id={`lf-min-${i}`}
@@ -229,7 +229,7 @@ export default function LearningForm({
                   <FieldError message={err(`sessions.${i}.minutes`)} />
                 </div>
               </div>
-              <div className="flex flex-wrap gap-2" role="group" aria-label="学習時間のプリセット">
+              <div className="flex flex-wrap gap-2" role="group" aria-label="時間のプリセット">
                 {PRESETS.map((p) => {
                   const on = s.minutes === String(p)
                   return (
@@ -310,7 +310,7 @@ export default function LearningForm({
               onClick={() => set('sessions', [...values.sessions, emptySession()])}
               className="text-brand-500 w-fit text-[13px] font-bold"
             >
-              ＋ 別のタグの学習を追加
+              ＋ 別のタグの記録を追加
             </button>
           ) : null}
           <FieldError message={err('sessions')} />
@@ -444,7 +444,7 @@ export default function LearningForm({
             <div className="bg-surface-50 flex flex-col gap-2.5 rounded-2xl px-[22px] py-5">
               <div className="flex items-center justify-between gap-3">
                 <label htmlFor="lf-report" className="text-ink-950 text-xs font-black">
-                  学習レポート（編集できます）
+                  日報（編集できます）
                 </label>
                 {values.reportAiPolished && values.reportText ? <AiBadge /> : null}
               </div>
@@ -522,7 +522,7 @@ export default function LearningForm({
           <ol className="text-ink-inverse-50 flex flex-col gap-2.5 text-sm leading-[1.8]">
             {[
               '時間とタグは入力した値のまま。AIは変更しない。',
-              '入力にない学習内容や感想は、AIに足させない。',
+              '入力にない内容や感想は、AIに足させない。',
               '公開前に必ず自分で読み、直してから公開する。',
               '公開ページには「AI整形」バッジを付け、隠さない。',
             ].map((t, i) => (

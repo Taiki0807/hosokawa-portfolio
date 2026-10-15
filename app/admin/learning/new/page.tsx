@@ -24,7 +24,7 @@ export default async function NewLearningPage({ searchParams }: Props) {
     <>
       <PageHeader
         eyebrow="Admin"
-        title="今日の学習を記録する"
+        title="今日の記録を書く"
         description="時間・タグ・一言メモは自分で入力します。AIは入力内容を読みやすい日報の文章に整えるだけで、事実は足しません。"
       />
       <LearningForm

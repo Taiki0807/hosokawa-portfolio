@@ -16,8 +16,8 @@ export const mockProvider: AiProvider = {
         {
           tag: '強み',
           title: '【モック】継続して学習している',
-          text: '【モック】学習ログの記録をもとにしたコメントです。',
-          evidence: [{ label: '学習ログ', href: '/#learning' }],
+          text: '【モック】学習・開発ログの記録をもとにしたコメントです。',
+          evidence: [{ label: '学習・開発ログ', href: '/#learning' }],
         },
         {
           tag: '技術',

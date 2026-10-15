@@ -12,7 +12,7 @@ export const NavLinks = [
     href: '/#skills',
   },
   {
-    name: 'Learning',
+    name: 'Log',
     href: '/#learning',
   },
   {

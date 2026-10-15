@@ -59,7 +59,7 @@ export default async function AccountPage() {
           <div>
             <h2 className="text-ink-950 text-lg font-black">データのエクスポート</h2>
             <p className="text-ink-600 mt-1 text-xs leading-[1.8]">
-              学習ログ全件を、JSON または Markdown でバックアップできます。
+              学習・開発ログの全件を、JSON または Markdown でバックアップできます。
             </p>
           </div>
           <div className="flex gap-2.5">

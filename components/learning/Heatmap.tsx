@@ -78,7 +78,7 @@ export default function Heatmap({ weeks, months, selected, onSelect }: Props) {
           <div
             ref={gridRef}
             role="group"
-            aria-label="過去1年の学習ヒートマップ。矢印キーで日付を移動できます"
+            aria-label="過去1年の学習・開発ヒートマップ。矢印キーで日付を移動できます"
             onKeyDown={onKeyDown}
             className="grid grid-flow-col"
             style={{

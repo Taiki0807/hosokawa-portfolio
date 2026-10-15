@@ -69,9 +69,9 @@ export default async function LearningSection({ goals }: { goals: ReactNode }) {
     <section id="learning" aria-labelledby="learning-title" className="scroll-mt-24">
       <div className="px-6 pt-6 pb-10 sm:px-10 lg:px-20">
         <SectionHeader
-          eyebrow="Learning Log"
-          title={<span id="learning-title">毎日の学習ログ</span>}
-          description="仕事で触れきれない技術も、毎日少しずつ。学んだ日・時間・内容を記録しています。マスにカーソルを重ねると概要、クリックで詳細が読めます。"
+          eyebrow="Learning & Build Log"
+          title={<span id="learning-title">毎日の学習・開発ログ</span>}
+          description="仕事で触れきれない技術の学習も、個人開発の作業も、毎日少しずつ。取り組んだ日・時間・内容を記録しています。マスにカーソルを重ねると概要、クリックで詳細が読めます。"
         />
       </div>
       <LearningExplorer data={explorer} goals={goals} />

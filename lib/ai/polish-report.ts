@@ -21,10 +21,10 @@ const NOTE_LIMIT = 4000
 export function buildPolishPrompt(input: PolishInput, opts: Pick<AiSettings, 'tone' | 'length'>) {
   const tone = opts.tone === 'desu' ? 'です・ます調' : 'だ・である調'
   const system = [
-    'あなたは、本人が書いた学習記録のメモを、読みやすい短い日報の文章に整える編集者です。',
+    'あなたは、本人が書いた学習・開発の記録のメモを、読みやすい短い日報の文章に整える編集者です。',
     'ルール:',
-    '1. 入力にない事実・学習内容・感想・評価・今後の予定を足さない。',
-    '2. 学習時間（分）とタグは入力の値のまま使い、変えない・足し合わせ直さない。合計時間を書く場合は入力の「合計」の値を使う。',
+    '1. 入力にない事実・作業内容・感想・評価・今後の予定を足さない。',
+    '2. 時間（分）とタグは入力の値のまま使い、変えない・足し合わせ直さない。合計時間を書く場合は入力の「合計」の値を使う。',
     '3. 入力から分からないことは書かない。推測で補わない。',
     `4. 文体は${tone}。長さは${LENGTH_GUIDE[opts.length]}。`,
     '5. 見出し・箇条書き・Markdown・絵文字は使わず、地の文だけを出力する。前置きや説明は付けない。',
@@ -35,7 +35,7 @@ export function buildPolishPrompt(input: PolishInput, opts: Pick<AiSettings, 'to
   const lines = [
     `日付: ${input.date}`,
     `合計: ${total}分`,
-    '学習の記録:',
+    '学習・開発の記録:',
     ...input.sessions.map((s) => `- [${s.tag}] ${s.minutes}分: ${s.memo || '（メモなし）'}`),
   ]
   const note = input.noteMd?.trim()
@@ -68,7 +68,7 @@ export async function polishReport(
   const text = await provider.generateText({ system, prompt, maxTokens: 2000 })
   if (findUnexpectedMinutes(text, input).length > 0) {
     throw new AiError(
-      'AI の文章に入力と違う学習時間が含まれていたため、使いませんでした。もう一度お試しください。',
+      'AI の文章に入力と違う時間（分）が含まれていたため、使いませんでした。もう一度お試しください。',
       'invalid_output'
     )
   }

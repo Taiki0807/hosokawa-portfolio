@@ -22,7 +22,7 @@ export default function NotFound() {
           ホームへ戻る
         </Link>
         <Link href="/#learning" className={secondary}>
-          学習ログを見る
+          学習・開発ログを見る
         </Link>
         <Link href="/blog" className={secondary}>
           ブログを読む

@@ -39,19 +39,16 @@ export default function PublishSettingsForm({ initial }: { initial: SiteSettings
       <section className={`${cardClass} p-6 sm:p-8`}>
         <h2 className="text-ink-950 mb-2 text-lg font-black">公開設定</h2>
         <Row
-          label="学習ログを公開する"
+          label="学習・開発ログを公開する"
           desc="ホームの最近の記録・Day detail・詳細ページを公開します。"
         >
           <Toggle
-            label="学習ログを公開する"
+            label="学習・開発ログを公開する"
             checked={s.publish.showLog}
             onChange={pub('showLog')}
           />
         </Row>
-        <Row
-          label="草（ヒートマップ）を公開する"
-          desc="日ごとの学習時間の色分けと統計を表示します。"
-        >
+        <Row label="草（ヒートマップ）を公開する" desc="日ごとの時間の色分けと統計を表示します。">
           <Toggle
             label="草を公開する"
             checked={s.publish.showHeatmap}
@@ -130,7 +127,7 @@ export default function PublishSettingsForm({ initial }: { initial: SiteSettings
         </div>
         <p className="bg-brand-100 text-brand-700 mt-5 rounded-[14px] px-4 py-3 text-xs leading-[1.8]">
           <strong>AIに渡す情報：</strong>
-          日付・学習時間・タグ・メモ・詳細ノートと、レビュー生成時の集計・成果物の説明文のみ。メールアドレスやお問い合わせ、アクセス情報は渡しません。
+          日付・時間・タグ・メモ・詳細ノートと、レビュー生成時の集計・成果物の説明文のみ。メールアドレスやお問い合わせ、アクセス情報は渡しません。
         </p>
       </section>
 

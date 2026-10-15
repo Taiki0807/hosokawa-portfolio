@@ -131,7 +131,7 @@ function NowStudying({
           href="/#learning"
           className="ml-auto inline-flex items-center gap-1.5 self-end text-[13px] font-bold text-lime-500"
         >
-          学習ログを見る →
+          学習・開発ログを見る →
         </Link>
       </div>
     </div>
@@ -204,7 +204,7 @@ export default async function GoalsSection() {
     <div id="goals" className="scroll-mt-24 px-6 pb-14 sm:px-10 lg:px-20">
       <div className="mb-5 flex flex-wrap items-baseline justify-between gap-2">
         <h3 className="text-ink-950 text-2xl font-black">目標と挑戦中の資格</h3>
-        <span className="text-ink-600 text-xs font-bold">進捗は学習ログと連動します</span>
+        <span className="text-ink-600 text-xs font-bold">進捗は学習・開発ログと連動します</span>
       </div>
       <div className="flex flex-col gap-6 lg:flex-row lg:items-stretch">
         {now ? <NowStudying cert={now} sessions={learning.sessions} today={today} /> : null}

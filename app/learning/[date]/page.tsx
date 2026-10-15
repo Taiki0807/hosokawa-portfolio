@@ -28,7 +28,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { date } = await params
   const entry = await load(date)
   if (!entry) return {}
-  return { title: entry.title || `${date} の学習ログ` }
+  return { title: entry.title || `${date} の記録` }
 }
 
 function NeighborLink({
@@ -76,14 +76,14 @@ export default async function LearningPostPage({ params }: Props) {
           <span className="text-xs font-bold tracking-[0.12em] uppercase">Daily Log</span>
         </div>
         <h1 className="text-ink-950 text-[30px] leading-[1.35] font-black sm:text-[38px]">
-          {entry.title || `${date} の学習ログ`}
+          {entry.title || `${date} の記録`}
         </h1>
         <div className="text-ink-600 flex flex-wrap items-center gap-2.5 text-[13px]">
           <time dateTime={date}>
             {date}（{WEEKDAYS_JA[dayOfWeek(date)]}）
           </time>
           <span className="bg-ink-inverse-400 h-[3px] w-[3px] rounded-full" aria-hidden="true" />
-          <span>学習 {entry.minutes}分</span>
+          <span>合計 {entry.minutes}分</span>
           <span className="bg-ink-inverse-400 h-[3px] w-[3px] rounded-full" aria-hidden="true" />
           <span>{entry.sessions.length} sessions</span>
         </div>

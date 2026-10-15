@@ -8,9 +8,9 @@ type Item = { href: string; label: string; badge?: number; exact?: boolean }
 const GROUPS: { label?: string; items: Item[] }[] = [
   { items: [{ href: '/admin', label: '概要', exact: true }] },
   {
-    label: '学習',
+    label: 'ログ',
     items: [
-      { href: '/admin/learning/new', label: '学習を記録', exact: true },
+      { href: '/admin/learning/new', label: '今日の記録を書く', exact: true },
       { href: '/admin/learning', label: '記録一覧' },
       { href: '/admin/review', label: 'AIレビュー' },
     ],
@@ -87,7 +87,7 @@ export default function AdminSidebar({ openInquiries }: { openInquiries: number 
         href="/admin/learning/new"
         className="text-ink-950 mt-[18px] hidden items-center justify-center gap-2 rounded-[14px] bg-lime-500 px-4 py-3.5 text-[13px] font-black lg:flex"
       >
-        ＋ 今日の学習を記録
+        ＋ 今日の記録を書く
       </Link>
     </nav>
   )

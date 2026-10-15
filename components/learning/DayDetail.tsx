@@ -57,7 +57,7 @@ export default function DayDetail({ date, entry, privateMinutes, showNotes }: Pr
           {entry.reportText ? (
             <div className="bg-surface-50 flex flex-col gap-2.5 rounded-2xl px-[22px] py-5">
               <div className="flex items-center justify-between">
-                <span className="text-ink-950 text-xs font-black">学習レポート</span>
+                <span className="text-ink-950 text-xs font-black">日報</span>
                 {entry.reportAiPolished ? <AiBadge /> : null}
               </div>
               <p className="text-ink-700 text-sm leading-[1.95] whitespace-pre-line">
@@ -75,13 +75,13 @@ export default function DayDetail({ date, entry, privateMinutes, showNotes }: Pr
           ) : null}
           <p className="text-ink-600 text-[11px] leading-[1.8]">
             時間・タグ・メモは本人が入力した記録です。
-            {entry.reportAiPolished ? 'レポートの文章のみAIが整えています。' : null}
+            {entry.reportAiPolished ? '日報の文章のみAIが整えています。' : null}
           </p>
         </>
       ) : (
         <div className="bg-surface-50 text-ink-600 rounded-2xl px-6 py-7 text-center text-sm leading-[1.8]">
           {privateMinutes
-            ? `この日の記録は非公開です（学習時間 ${privateMinutes}分）。`
+            ? `この日の記録は非公開です（${privateMinutes}分）。`
             : 'この日の記録はありません。'}
         </div>
       )}

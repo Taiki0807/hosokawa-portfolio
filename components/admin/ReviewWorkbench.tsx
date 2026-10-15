@@ -26,7 +26,7 @@ const PERSONAS: { value: ReviewPersona; label: string }[] = [
   { value: 'hr', label: '採用担当' },
 ]
 const SOURCES: { value: ReviewSource; label: string }[] = [
-  { value: 'log', label: '学習ログ' },
+  { value: 'log', label: '学習・開発ログ' },
   { value: 'notes', label: '詳細ノート' },
   { value: 'works', label: '成果物' },
 ]
@@ -150,7 +150,7 @@ export default function ReviewWorkbench({
               onClick={generate}
             >
               <SparkleIcon size={14} />
-              {generating ? '学習ログと成果物を読んでいます…' : 'AIで評価を作る'}
+              {generating ? '学習・開発ログと成果物を読んでいます…' : 'AIで評価を作る'}
             </button>
             <span className="text-ink-600 text-xs">
               {lastGeneratedAt ? `前回の生成：${lastGeneratedAt}` : 'まだ生成していません'}

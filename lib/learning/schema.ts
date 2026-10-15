@@ -20,9 +20,9 @@ export const entryInputSchema = z
     id: z.number().int().positive().optional(),
     date: z.string().refine(isIsoDate, '日付を YYYY-MM-DD で入力してください'),
     title: z.string().trim().max(120, 'タイトルは120文字以内にしてください').default(''),
-    sessions: z.array(sessionInputSchema).min(1, '学習を1つ以上入力してください').max(10),
+    sessions: z.array(sessionInputSchema).min(1, '記録を1つ以上入力してください').max(10),
     noteMd: z.string().max(20000, '詳細ノートが長すぎます').default(''),
-    reportText: z.string().trim().max(4000, 'レポートが長すぎます').default(''),
+    reportText: z.string().trim().max(4000, '日報が長すぎます').default(''),
     reportAiPolished: z.boolean().default(false),
     /** 公開範囲：内容まで公開 / 時間だけ公開 */
     visibility: z.enum(['published', 'private']).default('published'),

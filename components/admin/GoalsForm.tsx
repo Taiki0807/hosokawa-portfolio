@@ -35,8 +35,8 @@ export type GoalDraft = {
 type Props = { initialCerts: CertDraft[]; initialGoals: GoalDraft[]; year: string; month: string }
 
 const SOURCE_LABELS: Record<GoalSource, string> = {
-  'auto:studyDays': '学習日数（自動）',
-  'auto:studyHours': '学習時間（自動）',
+  'auto:studyDays': '記録した日数（自動）',
+  'auto:studyHours': '記録した時間（自動）',
   manual: '手入力',
 }
 
@@ -283,7 +283,7 @@ export default function GoalsForm({ initialCerts, initialGoals, year, month }: P
                   value={c.progressMode}
                   onChange={(v) => updateCert(i, { progressMode: v })}
                   options={[
-                    { value: 'auto', label: '学習ログと連動' },
+                    { value: 'auto', label: 'ログと連動' },
                     { value: 'manual', label: '手入力' },
                   ]}
                 />
@@ -370,7 +370,7 @@ export default function GoalsForm({ initialCerts, initialGoals, year, month }: P
           </div>
         ))}
         <p className="text-ink-600 text-xs leading-[1.8]">
-          「学習ログと連動」は、対象のタグの累計学習時間 ÷ 目標時間
+          「ログと連動」は、対象のタグの累計学習時間 ÷ 目標時間
           で自動計算します。受験予定日を過ぎた資格はホームに表示されません。
         </p>
         <button

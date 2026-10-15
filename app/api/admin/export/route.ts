@@ -39,15 +39,15 @@ export const GET = adminRoute(async (_owner, request: Request) => {
       [
         `## ${e.date} ${e.title}`.trim(),
         '',
-        `- 状態: ${e.status}${e.reportAiPolished ? '（レポートはAI整形）' : ''}`,
+        `- 状態: ${e.status}${e.reportAiPolished ? '（日報はAI整形）' : ''}`,
         ...e.sessions.map((s) => `- [${s.tag}] ${s.minutes}分 ${s.memo}`.trimEnd()),
-        ...(e.reportText ? ['', '### 学習レポート', '', e.reportText] : []),
+        ...(e.reportText ? ['', '### 日報', '', e.reportText] : []),
         ...(e.noteMd ? ['', '### 詳細ノート', '', e.noteMd] : []),
         '',
       ].join('\n')
     )
     .join('\n')
-  return new Response(`# 学習ログ（${todayJst()} 時点）\n\n${md}`, {
+  return new Response(`# 学習・開発ログ（${todayJst()} 時点）\n\n${md}`, {
     headers: { ...headers, 'Content-Type': 'text/markdown; charset=utf-8' },
   })
 })

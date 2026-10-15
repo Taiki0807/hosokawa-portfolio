@@ -9,7 +9,7 @@ export default function AdminBar() {
           管理画面へ
         </Link>
         <Link href="/admin/learning/new" className="underline">
-          学習を記録
+          今日の記録を書く
         </Link>
       </span>
     </div>

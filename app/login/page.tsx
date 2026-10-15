@@ -25,12 +25,12 @@ export default async function LoginPage({ searchParams }: Props) {
             Owner console
           </span>
           <h1 className="text-ink-inverse-50 text-[34px] leading-[1.25] font-black sm:text-[44px]">
-            毎日の学習を、
+            毎日の学習と開発を、
             <br />
             ここから記録する。
           </h1>
           <p className="text-brand-200 text-[15px] leading-[1.9]">
-            学習ログの記録、目標や資格の更新、公開設定の変更ができる管理画面です。
+            学習・開発ログの記録、目標や資格の更新、公開設定の変更ができる管理画面です。
           </p>
         </div>
       }

@@ -93,7 +93,7 @@ export default function AccountMenu({ login, image, openInquiries, variant = 'si
                 className={item}
                 onClick={() => setOpen(false)}
               >
-                今日の学習を記録する
+                今日の記録を書く
               </Link>
             </>
           )}

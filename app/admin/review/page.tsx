@@ -27,7 +27,7 @@ export default async function ReviewAdminPage({ searchParams }: Props) {
       <PageHeader
         eyebrow="AI Review"
         title="AIレビュー"
-        description="学習ログと成果物をAIに読ませて、第三者の目線のコメント案を作ります。内容を確認・編集してから、ホームに公開します。"
+        description="学習・開発ログと成果物をAIに読ませて、第三者の目線のコメント案を作ります。内容を確認・編集してから、ホームに公開します。"
       />
       <ReviewWorkbench
         key={`${persona}-${state.drafts[0]?.batchId ?? 'none'}`}

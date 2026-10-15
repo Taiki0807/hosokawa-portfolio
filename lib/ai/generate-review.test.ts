@@ -28,7 +28,7 @@ const ctx: ReviewContext = {
 describe('buildReviewPrompt', () => {
   it('集計・ノート・成果物と、使ってよいリンクを渡す', () => {
     const { prompt, system } = buildReviewPrompt(ctx, 'tech', ['log', 'notes', 'works'])
-    expect(prompt).toContain('学習した日: 220日')
+    expect(prompt).toContain('記録した日: 220日')
     expect(prompt).toContain('AWS: 40時間')
     expect(prompt).toContain('### 2026-10-14 スタック分割')
     expect(prompt).toContain('[project] CSS Notes')
