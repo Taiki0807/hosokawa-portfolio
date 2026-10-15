@@ -19,6 +19,8 @@ export default async function NewPostPage({ searchParams }: Props) {
           excerpt: '',
           tags: '',
           bodyMd: '',
+          linkLabel: '',
+          linkHref: '',
           status: 'draft',
         }}
       />

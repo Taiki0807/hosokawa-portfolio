@@ -189,6 +189,9 @@ export const posts = sqliteTable(
       .notNull()
       .default(sql`'[]'`),
     bodyMd: text('body_md').notNull().default(''),
+    // 外部サイトなどへのリンク（MDX の frontmatter の link に相当）。空ならボタンを出さない
+    linkLabel: text('link_label').notNull().default(''),
+    linkHref: text('link_href').notNull().default(''),
     status: text('status').$type<'draft' | 'published'>().notNull().default('draft'),
     publishedAt: text('published_at'),
     ...timestamps,

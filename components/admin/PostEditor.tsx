@@ -6,6 +6,7 @@ import { useRef, useState, useTransition } from 'react'
 import NoteMarkdown from '@/components/learning/NoteMarkdown'
 import { deletePost, savePost } from '@/app/admin/works/actions'
 import type { PostKind } from '@/lib/db/schema'
+import { normalizeSlug } from '@/lib/admin/post-schema'
 import ImageUpload from './ImageUpload'
 import { FieldError, Notice, btnGhost, btnPrimary, cardClass, inputClass, labelClass } from './ui'
 
@@ -18,6 +19,8 @@ export type PostDraft = {
   excerpt: string
   tags: string
   bodyMd: string
+  linkLabel: string
+  linkHref: string
   status: 'draft' | 'published'
 }
 
@@ -26,6 +29,14 @@ const KIND_LABEL: Record<PostKind, string> = {
   blog: 'ブログ',
   'css-note': 'CSSノート',
 }
+
+const PATH_PREFIX: Record<PostKind, string> = {
+  project: '/projects/',
+  blog: '/blog/',
+  'css-note': '/css-notes/',
+}
+
+const looksLikeUrl = (v: string) => /^https?:\/\//i.test(v.trim())
 
 const SNIPPETS = {
   heading: '\n## 見出し\n',
@@ -69,6 +80,8 @@ export default function PostEditor({ initial }: { initial: PostDraft }) {
           .map((t) => t.trim())
           .filter(Boolean),
         bodyMd: v.bodyMd,
+        linkLabel: v.linkLabel,
+        linkHref: v.linkHref,
         intent,
       })
       setErrors(res.ok ? {} : (res.fieldErrors ?? {}))
@@ -119,16 +132,45 @@ export default function PostEditor({ initial }: { initial: PostDraft }) {
         <h2 className="text-ink-950 text-sm font-black sm:col-span-2 lg:col-span-4">
           記事の設定（{KIND_LABEL[v.kind]}）
         </h2>
-        <div>
+        <div className="sm:col-span-2">
           <label className={labelClass} htmlFor="pe-slug">
-            スラッグ（URL）
+            ページの URL 名（スラッグ）{' '}
+            <span className="text-ink-600 font-medium">（半角英小文字・数字・ハイフン）</span>
           </label>
-          <input
-            id="pe-slug"
-            className={inputClass}
-            value={v.slug}
-            onChange={(e) => setV((x) => ({ ...x, slug: e.target.value }))}
-          />
+          <div className="flex items-center gap-1.5">
+            <span className="text-ink-600 shrink-0 font-mono text-xs">{PATH_PREFIX[v.kind]}</span>
+            <input
+              id="pe-slug"
+              className={inputClass}
+              placeholder="tsumi-note"
+              aria-describedby="pe-slug-hint"
+              value={v.slug}
+              onChange={(e) => setV((x) => ({ ...x, slug: normalizeSlug(e.target.value) }))}
+            />
+          </div>
+          {looksLikeUrl(v.slug) ? (
+            <p id="pe-slug-hint" className="text-danger-600 mt-1.5 text-xs leading-[1.7]">
+              ここはこのサイト内のページの名前です。外部サイトの URL は「リンク」欄に入れます。{' '}
+              <button
+                type="button"
+                className="text-brand-500 font-bold underline"
+                onClick={() =>
+                  setV((x) => ({
+                    ...x,
+                    linkHref: x.linkHref || x.slug.trim(),
+                    slug: '',
+                  }))
+                }
+              >
+                リンク欄に移す
+              </button>
+            </p>
+          ) : (
+            <p id="pe-slug-hint" className="text-ink-600 mt-1.5 text-xs">
+              このページの URL になります：{PATH_PREFIX[v.kind]}
+              {v.slug || '…'}
+            </p>
+          )}
           <FieldError message={errors.slug} />
         </div>
         <div>
@@ -166,6 +208,35 @@ export default function PostEditor({ initial }: { initial: PostDraft }) {
             value={v.excerpt}
             onChange={(e) => setV((x) => ({ ...x, excerpt: e.target.value }))}
           />
+        </div>
+        <div className="sm:col-span-2 lg:col-span-3">
+          <label className={labelClass} htmlFor="pe-link-href">
+            リンク{' '}
+            <span className="text-ink-600 font-medium">
+              （任意。公開先のサイトや GitHub など。ページ上部にボタンで表示します）
+            </span>
+          </label>
+          <input
+            id="pe-link-href"
+            className={inputClass}
+            placeholder="https://"
+            value={v.linkHref}
+            onChange={(e) => setV((x) => ({ ...x, linkHref: e.target.value }))}
+          />
+          <FieldError message={errors.linkHref} />
+        </div>
+        <div>
+          <label className={labelClass} htmlFor="pe-link-label">
+            ボタンの文字
+          </label>
+          <input
+            id="pe-link-label"
+            className={inputClass}
+            placeholder="サイトを見る"
+            value={v.linkLabel}
+            onChange={(e) => setV((x) => ({ ...x, linkLabel: e.target.value }))}
+          />
+          <FieldError message={errors.linkLabel} />
         </div>
         <p className="text-ink-600 text-xs sm:col-span-2 lg:col-span-4">
           読了時間は本文の文字数から自動で計算されます（約{readMin}分）。

@@ -26,6 +26,8 @@ export default async function EditPostPage({ params }: Props) {
           excerpt: p.excerpt,
           tags: p.tags.join(', '),
           bodyMd: p.bodyMd,
+          linkLabel: p.linkLabel,
+          linkHref: p.linkHref,
           status: p.status,
         }}
       />
