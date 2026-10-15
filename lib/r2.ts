@@ -29,6 +29,9 @@ function config() {
     region: 'auto',
     endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
     credentials: { accessKeyId, secretAccessKey },
+    // 既定だと署名付き URL に「空の本文」のチェックサムが入り、実際のファイルを PUT すると失敗する
+    requestChecksumCalculation: 'WHEN_REQUIRED',
+    responseChecksumValidation: 'WHEN_REQUIRED',
   })
   return { client, bucket, publicBase }
 }
