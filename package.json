@@ -17,6 +17,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate:local": "tsx --env-file-if-exists=.env.local scripts/db-migrate-local.ts",
     "db:migrate:d1": "node --env-file-if-exists=.env.local node_modules/drizzle-kit/bin.cjs migrate",
+    "db:check:d1": "tsx --env-file-if-exists=.env.local scripts/d1-check.ts",
     "db:seed": "tsx --env-file-if-exists=.env.local scripts/seed.ts"
   },
   "dependencies": {
