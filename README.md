@@ -7,14 +7,14 @@ Next.js（App Router）製のポートフォリオ。既存の Blog / CSS Notes 
 - **第三者の目線レビュー**：AI が学習ログと成果物から作成し、本人が確認・編集して公開（「AIが作成」などの注意書きは常に表示）
 - **オーナー専用の管理画面** `/admin`：GitHub ログイン、記録フォーム（AI 整形）、記録一覧、AI レビュー、成果物・ブログ、スキル・資格、お問い合わせ受信箱、設定
 
-| 役割         | 使うもの                                                                 |
-| ------------ | ------------------------------------------------------------------------ |
-| ホスティング | Vercel                                                                   |
-| DB           | Cloudflare D1（HTTP API 経由、Drizzle ORM の `sqlite-proxy`）            |
-| 画像         | Cloudflare R2（署名付き URL で直接アップロード、カスタムドメインで配信） |
-| メール       | Resend（お問い合わせの通知）                                             |
-| 認証         | Auth.js v5 + GitHub OAuth（JWT セッション、許可リスト方式）              |
-| AI           | Anthropic API（サーバー側のみ）                                          |
+| 役割         | 使うもの                                                                          |
+| ------------ | --------------------------------------------------------------------------------- |
+| ホスティング | Vercel                                                                            |
+| DB           | Cloudflare D1（HTTP API 経由、Drizzle ORM の `sqlite-proxy`）                     |
+| 画像         | Cloudflare R2（署名付き URL で直接アップロード、カスタムドメインで配信）          |
+| メール       | Resend（お問い合わせの通知）                                                      |
+| 認証         | Auth.js v5 + GitHub OAuth（JWT セッション、許可リスト方式）                       |
+| AI           | OpenAI API（サーバー側のみ。`AI_PROVIDER=anthropic` で Anthropic にも切り替え可） |
 
 ## ローカル開発
 
@@ -103,7 +103,7 @@ pnpm dev
 
 ### 5. Vercel の環境変数
 
-`.env.example` のすべてを設定します（Production と Preview で D1 を分け、Preview は開発用 D1 を指す）。`DB_DRIVER=d1`。AI を使う場合は `ANTHROPIC_API_KEY` と `ANTHROPIC_MODEL`（既定 `claude-opus-5-5`）。
+`.env.example` のすべてを設定します（Production と Preview で D1 を分け、Preview は開発用 D1 を指す）。`DB_DRIVER=d1`。AI を使う場合は `OPENAI_API_KEY` と `OPENAI_MODEL`（必須。推論モデルなら任意で `OPENAI_REASONING_EFFORT`）。OpenAI には `store: false` で送り、学習ログを OpenAI 側に保存させません。Anthropic を使うときは `AI_PROVIDER=anthropic` と `ANTHROPIC_API_KEY`・`ANTHROPIC_MODEL`。
 
 ## 設計メモ
 
