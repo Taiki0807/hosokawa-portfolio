@@ -1,17 +1,19 @@
 'use client'
 
 import Link from 'next/link'
-import { signOut } from 'next-auth/react'
 import { useEffect, useId, useRef, useState } from 'react'
 import Avatar from '@/components/ui/Avatar'
+import SignOutButton from '@/components/ui/SignOutButton'
 
 type Props = {
   login: string
   image?: string | null
   openInquiries: number | null
+  /** site: 公開ページのナビ / admin: 管理画面のヘッダー */
+  variant?: 'site' | 'admin'
 }
 
-export default function AccountMenu({ login, image, openInquiries }: Props) {
+export default function AccountMenu({ login, image, openInquiries, variant = 'site' }: Props) {
   const [open, setOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const menuId = useId()
@@ -43,9 +45,14 @@ export default function AccountMenu({ login, image, openInquiries }: Props) {
         aria-expanded={open}
         aria-controls={menuId}
         onClick={() => setOpen((v) => !v)}
-        className="bg-surface-950 focus-visible:outline-brand-500 flex items-center gap-2.5 rounded-full py-[5px] pr-4 pl-[5px] focus-visible:outline-2 focus-visible:outline-offset-2"
+        aria-label={`${login}のアカウントメニュー`}
+        className={`focus-visible:outline-brand-500 flex items-center gap-2.5 rounded-full py-[5px] pr-4 pl-[5px] focus-visible:outline-2 focus-visible:outline-offset-2 ${
+          variant === 'admin'
+            ? 'border border-white/14 bg-white/8 hover:bg-white/14'
+            : 'bg-surface-950'
+        }`}
       >
-        <Avatar name={login} image={image} />
+        <Avatar name={login} image={image} size={variant === 'admin' ? 28 : 32} />
         <span className="text-ink-inverse-50 text-[13px] font-bold">{login}</span>
         <span aria-hidden="true" className="text-[10px] text-lime-500">
           ▼
@@ -61,17 +68,35 @@ export default function AccountMenu({ login, image, openInquiries }: Props) {
             <div className="text-ink-950 text-sm font-black">{login}</div>
             <div className="text-ink-600 text-xs">オーナーとしてログイン中</div>
           </div>
-          <Link role="menuitem" href="/admin" className={item} onClick={() => setOpen(false)}>
-            管理画面を開く
-          </Link>
-          <Link
-            role="menuitem"
-            href="/admin/learning/new"
-            className={item}
-            onClick={() => setOpen(false)}
-          >
-            今日の学習を記録する
-          </Link>
+          {variant === 'admin' ? (
+            <>
+              <Link role="menuitem" href="/" className={item} onClick={() => setOpen(false)}>
+                サイトを見る
+              </Link>
+              <Link
+                role="menuitem"
+                href="/admin/settings/account"
+                className={item}
+                onClick={() => setOpen(false)}
+              >
+                アカウント設定
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link role="menuitem" href="/admin" className={item} onClick={() => setOpen(false)}>
+                管理画面を開く
+              </Link>
+              <Link
+                role="menuitem"
+                href="/admin/learning/new"
+                className={item}
+                onClick={() => setOpen(false)}
+              >
+                今日の学習を記録する
+              </Link>
+            </>
+          )}
           <Link role="menuitem" href="/admin/inbox" className={item} onClick={() => setOpen(false)}>
             お問い合わせ
             {openInquiries ? (
@@ -81,14 +106,7 @@ export default function AccountMenu({ login, image, openInquiries }: Props) {
               </span>
             ) : null}
           </Link>
-          <button
-            type="button"
-            role="menuitem"
-            className={`${item} text-danger-600 text-left`}
-            onClick={() => signOut({ redirectTo: '/' })}
-          >
-            ログアウト
-          </button>
+          <SignOutButton role="menuitem" className={`${item} text-danger-600 w-full text-left`} />
         </div>
       ) : null}
     </div>

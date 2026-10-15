@@ -24,3 +24,16 @@ test('オーナーは管理画面に入れる', async ({ page, ownerContext }) =
   await page.goto('/admin')
   await expect(page.getByRole('heading', { name: /おかえりなさい/ })).toBeVisible()
 })
+
+test('管理画面のアカウントメニューからログアウトできる', async ({ page, ownerContext }) => {
+  await page.goto('/admin')
+  await page.getByRole('button', { name: /アカウントメニュー/ }).click()
+  await expect(page.getByRole('menuitem', { name: 'アカウント設定' })).toBeVisible()
+  await page.getByRole('menuitem', { name: 'ログアウト' }).click()
+  await expect(page).toHaveURL(/\/$/)
+  await expect(page.getByRole('link', { name: /login/i }).first()).toBeVisible()
+  const cookies = await ownerContext.cookies()
+  expect(cookies.some((c) => c.name.includes('session-token'))).toBe(false)
+  await page.goto('/admin')
+  await expect(page).toHaveURL(/\/login/)
+})

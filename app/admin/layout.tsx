@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import AdminSidebar from '@/components/admin/AdminSidebar'
-import Avatar from '@/components/ui/Avatar'
+import AccountMenu from '@/components/Home/NavBar/AccountMenu'
 import { requireOwnerPage } from '@/lib/auth/require-owner'
 import { countOpenInquiries } from '@/lib/admin/inbox'
 
@@ -29,10 +29,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           >
             サイトを見る ↗
           </Link>
-          <div className="flex items-center gap-2.5 rounded-full border border-white/14 bg-white/8 py-[5px] pr-4 pl-[5px]">
-            <Avatar name={owner.login} image={owner.image} size={28} />
-            <span className="text-ink-inverse-50 text-[13px] font-bold">{owner.login}</span>
-          </div>
+          <AccountMenu
+            variant="admin"
+            login={owner.login}
+            image={owner.image}
+            openInquiries={openInquiries}
+          />
         </div>
       </header>
       <div className="flex flex-col lg:flex-row">
