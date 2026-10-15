@@ -36,6 +36,7 @@ export const goalInputSchema = z
     unit: z.string().trim().max(10).default(''),
     source: z.enum(GOAL_SOURCES),
     manualValue: optionalNumber,
+    studyTags: z.array(z.string().trim().min(1).max(40)).max(20).default([]),
     note: z.string().trim().max(80).default(''),
   })
   .refine(

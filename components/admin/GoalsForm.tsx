@@ -27,6 +27,8 @@ export type GoalDraft = {
   unit: string
   source: GoalSource
   manualValue: string
+  /** カンマ区切り */
+  studyTags: string
   note: string
 }
 
@@ -37,6 +39,12 @@ const SOURCE_LABELS: Record<GoalSource, string> = {
   'auto:studyHours': '学習時間（自動）',
   manual: '手入力',
 }
+
+const splitTags = (v: string) =>
+  v
+    .split(/[,、]/)
+    .map((t) => t.trim())
+    .filter(Boolean)
 
 export default function GoalsForm({ initialCerts, initialGoals, year, month }: Props) {
   const router = useRouter()
@@ -61,12 +69,9 @@ export default function GoalsForm({ initialCerts, initialGoals, year, month }: P
       const res = await saveGoals({
         certTargets: certs.map((c) => ({
           ...c,
-          studyTags: c.studyTags
-            .split(/[,、]/)
-            .map((t) => t.trim())
-            .filter(Boolean),
+          studyTags: splitTags(c.studyTags),
         })),
-        goals,
+        goals: goals.map((g) => ({ ...g, studyTags: splitTags(g.studyTags) })),
       })
       setFieldErrors(res.ok ? {} : (res.fieldErrors ?? {}))
       setMessage(
@@ -167,6 +172,24 @@ export default function GoalsForm({ initialCerts, initialGoals, year, month }: P
                 </div>
               ) : null}
             </div>
+            {g.source !== 'manual' ? (
+              <div>
+                <label className={labelClass} htmlFor={`g-tags-${i}`}>
+                  対象のタグ{' '}
+                  <span className="text-ink-600 font-medium">
+                    （カンマ区切り。空欄なら全部のタグを数えます）
+                  </span>
+                </label>
+                <input
+                  id={`g-tags-${i}`}
+                  className={inputClass}
+                  value={g.studyTags}
+                  placeholder="例: MuleSoft, Salesforce"
+                  onChange={(e) => updateGoal(i, { studyTags: e.target.value })}
+                />
+                <FieldError message={fieldErrors[`goals.${i}.studyTags`]} />
+              </div>
+            ) : null}
             <button
               type="button"
               className="text-danger-600 w-fit text-xs font-bold"
@@ -191,6 +214,7 @@ export default function GoalsForm({ initialCerts, initialGoals, year, month }: P
               unit: '',
               source: 'manual',
               manualValue: '',
+              studyTags: '',
               note: '',
             },
           ])

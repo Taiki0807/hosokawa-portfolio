@@ -18,10 +18,11 @@ describe('periodRange', () => {
 
 describe('goalProgress', () => {
   const days = [
-    { date: '2026-09-30', minutes: 60 },
-    { date: '2026-10-01', minutes: 90 },
-    { date: '2026-10-02', minutes: 30 },
-    { date: '2026-10-03', minutes: 0 },
+    { date: '2026-09-30', tag: 'AWS', minutes: 60 },
+    { date: '2026-10-01', tag: 'AWS', minutes: 60 },
+    { date: '2026-10-01', tag: 'Next.js', minutes: 30 },
+    { date: '2026-10-02', tag: 'Next.js', minutes: 30 },
+    { date: '2026-10-03', tag: 'AWS', minutes: 0 },
   ]
 
   it('学習日数（自動）は期間内の学習した日だけ数える', () => {
@@ -32,6 +33,7 @@ describe('goalProgress', () => {
         target: 20,
         source: 'auto:studyDays',
         manualValue: null,
+        studyTags: [],
       },
       days
     )
@@ -40,23 +42,57 @@ describe('goalProgress', () => {
 
   it('学習時間（自動）は時間に換算', () => {
     const p = goalProgress(
-      { kind: 'yearly', period: '2026', target: 30, source: 'auto:studyHours', manualValue: null },
+      {
+        kind: 'yearly',
+        period: '2026',
+        target: 30,
+        source: 'auto:studyHours',
+        manualValue: null,
+        studyTags: [],
+      },
       days
     )
     expect(p.current).toBe(3)
     expect(p.percent).toBe(10)
   })
 
+  it('対象タグを決めたら、そのタグの時間・日数だけ数える', () => {
+    const base = { kind: 'monthly', period: '2026-10', target: 10, manualValue: null } as const
+    expect(
+      goalProgress({ ...base, source: 'auto:studyHours', studyTags: ['AWS'] }, days).current
+    ).toBe(1)
+    expect(
+      goalProgress({ ...base, source: 'auto:studyDays', studyTags: ['Next.js'] }, days).current
+    ).toBe(2)
+    expect(
+      goalProgress({ ...base, source: 'auto:studyHours', studyTags: ['Kaggle'] }, days).current
+    ).toBe(0)
+  })
+
   it('手入力は manualValue を使い、未入力なら 0', () => {
     expect(
       goalProgress(
-        { kind: 'yearly', period: '2026', target: 12, source: 'manual', manualValue: 7 },
+        {
+          kind: 'yearly',
+          period: '2026',
+          target: 12,
+          source: 'manual',
+          manualValue: 7,
+          studyTags: [],
+        },
         days
       ).percent
     ).toBe(58)
     expect(
       goalProgress(
-        { kind: 'yearly', period: '2026', target: 12, source: 'manual', manualValue: null },
+        {
+          kind: 'yearly',
+          period: '2026',
+          target: 12,
+          source: 'manual',
+          manualValue: null,
+          studyTags: [],
+        },
         days
       ).current
     ).toBe(0)
@@ -65,13 +101,27 @@ describe('goalProgress', () => {
   it('100% を超えない・目標 0 なら 0%', () => {
     expect(
       goalProgress(
-        { kind: 'yearly', period: '2026', target: 1, source: 'manual', manualValue: 5 },
+        {
+          kind: 'yearly',
+          period: '2026',
+          target: 1,
+          source: 'manual',
+          manualValue: 5,
+          studyTags: [],
+        },
         days
       ).percent
     ).toBe(100)
     expect(
       goalProgress(
-        { kind: 'yearly', period: '2026', target: 0, source: 'manual', manualValue: 5 },
+        {
+          kind: 'yearly',
+          period: '2026',
+          target: 0,
+          source: 'manual',
+          manualValue: 5,
+          studyTags: [],
+        },
         days
       ).percent
     ).toBe(0)

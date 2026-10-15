@@ -77,6 +77,11 @@ export const goals = sqliteTable('goal', {
   unit: text('unit').notNull().default(''),
   source: text('source').$type<GoalSource>().notNull().default('manual'),
   manualValue: real('manual_value'),
+  // 自動で数えるときの対象タグ。空なら全部のタグ
+  studyTags: text('study_tags', { mode: 'json' })
+    .$type<string[]>()
+    .notNull()
+    .default(sql`'[]'`),
   note: text('note').notNull().default(''),
   sort: integer('sort').notNull().default(0),
   ...timestamps,

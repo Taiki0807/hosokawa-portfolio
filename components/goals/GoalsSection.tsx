@@ -8,7 +8,7 @@ import {
 } from '@/lib/learning/queries'
 import { formatSlash, monthOf, todayJst, yearOf } from '@/lib/learning/date'
 import { certProgress, daysUntil, goalProgress } from '@/lib/learning/goals'
-import { minutesToHours, type DayTotal } from '@/lib/learning/stats'
+import { minutesToHours } from '@/lib/learning/stats'
 import type { SessionRecord } from '@/lib/learning/goals'
 
 const card =
@@ -18,8 +18,8 @@ function formatValue(n: number) {
   return Number.isInteger(n) ? String(n) : n.toFixed(1)
 }
 
-function GoalRowView({ goal, days }: { goal: GoalRow; days: DayTotal[] }) {
-  const p = goalProgress(goal, days)
+function GoalRowView({ goal, sessions }: { goal: GoalRow; sessions: SessionRecord[] }) {
+  const p = goalProgress(goal, sessions)
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-baseline justify-between gap-3">
@@ -218,7 +218,7 @@ export default async function GoalsSection() {
                   <span className="text-ink-600 text-[11px] font-bold">YEARLY</span>
                 </div>
                 {yearly.map((g) => (
-                  <GoalRowView key={g.id} goal={g} days={learning.days} />
+                  <GoalRowView key={g.id} goal={g} sessions={learning.sessions} />
                 ))}
               </div>
             ) : null}
@@ -238,7 +238,7 @@ export default async function GoalsSection() {
           <div className="flex flex-1 flex-col gap-6 md:flex-row md:gap-10">
             {monthly.map((g) => (
               <div key={g.id} className="flex-1">
-                <GoalRowView goal={g} days={learning.days} />
+                <GoalRowView goal={g} sessions={learning.sessions} />
               </div>
             ))}
           </div>

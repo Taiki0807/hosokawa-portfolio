@@ -1,5 +1,5 @@
 import { addDays, diffDays, monthOf, type IsoDate } from './date'
-import { minutesToHours, type DayTotal } from './stats'
+import { minutesToHours } from './stats'
 import type { GoalKind, GoalSource } from '@/lib/db/schema'
 
 export type SessionRecord = { date: IsoDate; tag: string; minutes: number }
@@ -10,6 +10,8 @@ export type GoalInput = {
   target: number
   source: GoalSource
   manualValue: number | null
+  /** 自動で数えるときの対象タグ。空なら全部のタグ */
+  studyTags: string[]
 }
 
 export type GoalProgress = { current: number; target: number; percent: number }
@@ -27,12 +29,15 @@ export function periodRange(kind: GoalKind, period: string): { from: IsoDate; to
   return { from, to: addDays(next, -1) }
 }
 
-export function goalCurrentValue(goal: GoalInput, days: DayTotal[]): number {
+export function goalCurrentValue(goal: GoalInput, sessions: SessionRecord[]): number {
   if (goal.source === 'manual') return goal.manualValue ?? 0
   const { from, to } = periodRange(goal.kind, goal.period)
-  const inPeriod = days.filter((d) => d.date >= from && d.date <= to && d.minutes > 0)
-  if (goal.source === 'auto:studyDays') return new Set(inPeriod.map((d) => d.date)).size
-  return minutesToHours(inPeriod.reduce((sum, d) => sum + d.minutes, 0))
+  const tags = new Set(goal.studyTags)
+  const inPeriod = sessions.filter(
+    (s) => s.date >= from && s.date <= to && s.minutes > 0 && (tags.size === 0 || tags.has(s.tag))
+  )
+  if (goal.source === 'auto:studyDays') return new Set(inPeriod.map((s) => s.date)).size
+  return minutesToHours(inPeriod.reduce((sum, s) => sum + s.minutes, 0))
 }
 
 export function toProgress(current: number, target: number): GoalProgress {
@@ -40,8 +45,8 @@ export function toProgress(current: number, target: number): GoalProgress {
   return { current, target, percent }
 }
 
-export function goalProgress(goal: GoalInput, days: DayTotal[]): GoalProgress {
-  return toProgress(goalCurrentValue(goal, days), goal.target)
+export function goalProgress(goal: GoalInput, sessions: SessionRecord[]): GoalProgress {
+  return toProgress(goalCurrentValue(goal, sessions), goal.target)
 }
 
 /** 試験日までの残り日数（当日 0、過ぎていれば負） */

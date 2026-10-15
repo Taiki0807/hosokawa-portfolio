@@ -15,6 +15,13 @@
       "when": 1792010527188,
       "tag": "0001_import_existing_skills_and_certs",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792099477088,
+      "tag": "0002_goal_study_tags",
+      "breakpoints": true
     }
   ]
 }

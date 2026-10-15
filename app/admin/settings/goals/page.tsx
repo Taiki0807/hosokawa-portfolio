@@ -37,6 +37,7 @@ export default async function GoalsSettingsPage() {
           unit: g.unit,
           source: g.source,
           manualValue: str(g.manualValue),
+          studyTags: g.studyTags.join(', '),
           note: g.note,
         }))}
       />
