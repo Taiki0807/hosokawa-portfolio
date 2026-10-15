@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "tsx --env-file-if-exists=.env.local scripts/check-migrations.ts && next build",
+    "db:check:migrations": "tsx --env-file-if-exists=.env.local scripts/check-migrations.ts",
     "start": "next start",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
