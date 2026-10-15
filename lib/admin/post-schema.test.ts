@@ -44,6 +44,18 @@ describe('postInputSchema', () => {
     expect(r.linkLabel).toBe('サイトを見る')
   })
 
+  it('アイコンは画像の URL・サイト内のパス・絵文字 1 つだけ', () => {
+    const ok = (icon: string) => postInputSchema.safeParse({ ...base, slug: 'a', icon }).success
+    expect(ok('')).toBe(true)
+    expect(ok('🎮')).toBe(true)
+    expect(ok('👩‍💻')).toBe(true)
+    expect(ok('/project-icons/tsumi-note.svg')).toBe(true)
+    expect(ok('https://img.hosokawa-lab.dev/posts/x.png')).toBe(true)
+    expect(ok('長いテキストのアイコン')).toBe(false)
+    expect(ok('<b>')).toBe(false)
+    expect(ok('//evil.example.com/x.png')).toBe(false)
+  })
+
   it('危険なリンクは保存しない', () => {
     const r = postInputSchema.safeParse({ ...base, slug: 'a', linkHref: 'javascript:alert(1)' })
     expect(r.success).toBe(false)

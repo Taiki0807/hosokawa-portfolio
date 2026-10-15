@@ -9,6 +9,8 @@ import { getDb } from '@/lib/db/client'
 import { posts } from '@/lib/db/schema'
 import { CACHE_TAGS } from '@/lib/cache-tags'
 import { getAllNoteSlugs, getAllPostSlugs, getAllProjectSlugs } from '@/lib/content'
+import { isImageIcon } from '@/lib/admin/post-schema'
+import { isAllowedImageUrl } from '@/lib/r2'
 
 const MDX_SLUGS = {
   blog: getAllPostSlugs,
@@ -17,6 +19,12 @@ const MDX_SLUGS = {
 } as const
 
 export const savePost = ownerAction(postInputSchema, async (input) => {
+  // 画像のアイコンは、自分の R2 にアップロードしたもの（か、サイト内の画像）だけ
+  if (input.icon && isImageIcon(input.icon) && !input.icon.startsWith('/')) {
+    if (!isAllowedImageUrl(input.icon)) {
+      throw new ActionError('アイコンの画像は、この画面からアップロードしたものを使ってください。')
+    }
+  }
   // 既存の MDX 記事と URL が重ならないようにする
   if (MDX_SLUGS[input.kind]().includes(input.slug)) {
     throw new ActionError('このスラッグは既存の MDX 記事で使われています。')

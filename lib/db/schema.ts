@@ -192,6 +192,8 @@ export const posts = sqliteTable(
     // 外部サイトなどへのリンク（MDX の frontmatter の link に相当）。空ならボタンを出さない
     linkLabel: text('link_label').notNull().default(''),
     linkHref: text('link_href').notNull().default(''),
+    // 成果物の一覧（Featured project）に出すアイコン。画像の URL か絵文字。空なら既定のアイコン
+    icon: text('icon').notNull().default(''),
     status: text('status').$type<'draft' | 'published'>().notNull().default('draft'),
     publishedAt: text('published_at'),
     ...timestamps,

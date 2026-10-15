@@ -1,0 +1,1 @@
+ALTER TABLE `post` ADD `icon` text DEFAULT '' NOT NULL;

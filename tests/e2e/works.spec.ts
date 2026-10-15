@@ -16,6 +16,7 @@ test('URL 名にリンクを入れても案内に従って保存でき、公開�
   await expect(page.getByLabel(/^リンク/)).toHaveValue('https://example.com/e2e')
 
   await slugInput.fill(slug)
+  await page.getByLabel('または絵文字').fill('🎮')
   await page.getByRole('button', { name: '下書き保存' }).click()
   await expect(page.getByText('下書きとして保存しました。')).toBeVisible()
 
@@ -25,4 +26,9 @@ test('URL 名にリンクを入れても案内に従って保存でき、公開�
   await page.goto(`/projects/${slug}`)
   const link = page.getByRole('link', { name: /サイトを見る/ })
   await expect(link).toHaveAttribute('href', 'https://example.com/e2e')
+
+  // ホームの Featured project に、入れたアイコンで出る
+  await page.goto('/')
+  const card = page.locator('#projects a', { hasText: 'E2E の成果物' })
+  await expect(card.getByText('🎮')).toBeVisible()
 })

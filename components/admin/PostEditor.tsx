@@ -6,7 +6,7 @@ import { useRef, useState, useTransition } from 'react'
 import NoteMarkdown from '@/components/learning/NoteMarkdown'
 import { deletePost, savePost } from '@/app/admin/works/actions'
 import type { PostKind } from '@/lib/db/schema'
-import { normalizeSlug } from '@/lib/admin/post-schema'
+import { isImageIcon, normalizeSlug } from '@/lib/admin/post-schema'
 import ImageUpload from './ImageUpload'
 import { FieldError, Notice, btnGhost, btnPrimary, cardClass, inputClass, labelClass } from './ui'
 
@@ -21,6 +21,7 @@ export type PostDraft = {
   bodyMd: string
   linkLabel: string
   linkHref: string
+  icon: string
   status: 'draft' | 'published'
 }
 
@@ -82,6 +83,7 @@ export default function PostEditor({ initial }: { initial: PostDraft }) {
         bodyMd: v.bodyMd,
         linkLabel: v.linkLabel,
         linkHref: v.linkHref,
+        icon: v.icon,
         intent,
       })
       setErrors(res.ok ? {} : (res.fieldErrors ?? {}))
@@ -238,6 +240,40 @@ export default function PostEditor({ initial }: { initial: PostDraft }) {
           />
           <FieldError message={errors.linkLabel} />
         </div>
+        {v.kind === 'project' ? (
+          <div className="border-surface-200 flex flex-col gap-3 border-t pt-4 sm:col-span-2 lg:col-span-4">
+            <span className={labelClass}>
+              一覧のアイコン{' '}
+              <span className="text-ink-600 font-medium">
+                （任意。ホームの Featured project に表示します。画像か絵文字のどちらか）
+              </span>
+            </span>
+            <div className="flex flex-wrap items-start gap-6">
+              <div className="w-[220px]">
+                <ImageUpload
+                  label="アイコン画像（正方形がおすすめ）"
+                  prefix="posts"
+                  value={isImageIcon(v.icon) ? v.icon : ''}
+                  onChange={(url) => setV((x) => ({ ...x, icon: url }))}
+                />
+              </div>
+              <div className="w-[160px]">
+                <label className={labelClass} htmlFor="pe-icon-emoji">
+                  または絵文字
+                </label>
+                <input
+                  id="pe-icon-emoji"
+                  className={`${inputClass} text-center text-2xl`}
+                  placeholder="🎮"
+                  value={isImageIcon(v.icon) ? '' : v.icon}
+                  onChange={(e) => setV((x) => ({ ...x, icon: e.target.value }))}
+                />
+                <p className="text-ink-600 mt-1.5 text-xs">入れると画像は外れます。</p>
+              </div>
+            </div>
+            <FieldError message={errors.icon} />
+          </div>
+        ) : null}
         <p className="text-ink-600 text-xs sm:col-span-2 lg:col-span-4">
           読了時間は本文の文字数から自動で計算されます（約{readMin}分）。
         </p>

@@ -12,6 +12,11 @@ export function normalizeSlug(v: string) {
     .replace(/-+/g, '-')
 }
 
+/** アイコンが画像（URL・サイト内のパス）か。違えば絵文字として扱う */
+export function isImageIcon(v: string) {
+  return /^https:\/\//.test(v) || (v.startsWith('/') && !v.startsWith('//'))
+}
+
 /** リンク先は http(s) の URL か、サイト内のパス（/ で始まる。// は不可）だけ */
 export function isAllowedLinkHref(v: string) {
   if (v.startsWith('/')) return !v.startsWith('//')
@@ -54,6 +59,15 @@ export const postInputSchema = z
       .refine(
         (v) => v === '' || isAllowedLinkHref(v),
         'https:// で始まる URL か、/ で始まるサイト内のパスを入れてください'
+      ),
+    icon: z
+      .string()
+      .trim()
+      .max(300)
+      .default('')
+      .refine(
+        (v) => v === '' || isImageIcon(v) || (Array.from(v).length <= 4 && !/[\s<>]/.test(v)),
+        'アイコンは画像をアップロードするか、絵文字 1 つを入れてください'
       ),
     intent: z.enum(['draft', 'publish']),
   })

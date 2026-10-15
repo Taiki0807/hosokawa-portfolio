@@ -99,6 +99,7 @@ export async function getMergedProjects(): Promise<ProjectMeta[]> {
       readingTime: readingTimeOf(p.bodyMd),
       tags: p.tags,
       ...(p.linkHref ? { link: { label: p.linkLabel || 'サイトを見る', href: p.linkHref } } : {}),
+      ...(p.icon ? { icon: p.icon } : {}),
     }))
   return [...mdx, ...db].sort(byDateDesc)
 }
