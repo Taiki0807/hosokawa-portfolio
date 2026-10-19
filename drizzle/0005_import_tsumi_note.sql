@@ -1,14 +1,6 @@
----
-title: つみノート
-description: ポモドーロタイマー・Markdownノート・間隔反復（FSRS）で学習を管理するアプリ。Web版のLPを公開中、iOS/iPadOS版とAPIは開発中。
-date: 2026-09-25
-readingTime: 5
-tags: [TanStack Start, TypeScript, Tailwind CSS, Cloudflare Workers, Expo, React Native]
-link: { label: 'サイトを見る', href: 'https://tsumi-note.hosokawa-lab.dev/' }
-icon: /project-icons/tsumi-note.svg
----
-
-## 概要
+-- content/projects/tsumi-note.mdx を管理画面（D1）で編集できるように移す
+-- 同じ slug の MDX が残っている間は MDX が優先されるので、表示は変わらない。MDX はこの変更で削除する
+INSERT OR IGNORE INTO post (kind, slug, title, category, excerpt, tags, body_md, link_label, link_href, icon, status, published_at, created_at, updated_at) VALUES ('project', 'tsumi-note', 'つみノート', '', 'ポモドーロタイマー・Markdownノート・間隔反復（FSRS）で学習を管理するアプリ。Web版のLPを公開中、iOS/iPadOS版とAPIは開発中。', '["TanStack Start","TypeScript","Tailwind CSS","Cloudflare Workers","Expo","React Native"]', '## 概要
 
 資格試験・語学学習向けの学習管理アプリです。ポモドーロタイマー・Markdownノート・間隔反復（FSRS）アルゴリズムによる復習を1つにまとめています。現在はLP（Webサイト）を公開中で、iOS/iPadOSアプリと同期用APIを開発中です。
 
@@ -23,9 +15,8 @@ icon: /project-icons/tsumi-note.svg
 | メール送信     | Resend（お問い合わせフォーム）                   |
 | 開発ツール     | Vite / Vitest + Testing Library / Lefthook / Bun |
 
-<Callout type="info">
-  先にFigmaでデザインを作り込み、それを忠実にコードへ再現しました。書き出し画像と実画面をセクションごとに並べて確認し、ページの高さも一致させています。Figmaの色変数もそのままTailwindのトークンにしています。
-</Callout>
+> [!NOTE]
+> 先にFigmaでデザインを作り込み、それを忠実にコードへ再現しました。書き出し画像と実画面をセクションごとに並べて確認し、ページの高さも一致させています。Figmaの色変数もそのままTailwindのトークンにしています。
 
 - **アプリ画面のモックアップをコードで描画**：画像を使わずHTMLとCSSで組み、390×844を基準に縮小表示。どの解像度でもぼやけず軽量です。
 - **エッジでSSR**：Cloudflare Workersで配信し、起動時間は16ms。無料枠の範囲で運用できます。
@@ -43,9 +34,8 @@ icon: /project-icons/tsumi-note.svg
 | タイマー         | 開始・終了時刻から残り時間を計算 + expo-notifications |
 | ビルド・配布     | 手元のMacのXcodeでArchive → TestFlight                |
 
-<Callout type="success">
-  Ankiにも採用されているFSRS（間隔反復アルゴリズム）を使用。4段階評価（もう一度・難しい・普通・簡単）で次の復習日を自動計算します。データはまず端末のSQLiteに保存するので、ログインなしでも全機能がオフラインで使えます。
-</Callout>
+> [!TIP]
+> Ankiにも採用されているFSRS（間隔反復アルゴリズム）を使用。4段階評価（もう一度・難しい・普通・簡単）で次の復習日を自動計算します。データはまず端末のSQLiteに保存するので、ログインなしでも全機能がオフラインで使えます。
 
 ## 同期・認証API（開発中）
 
@@ -63,4 +53,4 @@ icon: /project-icons/tsumi-note.svg
 - Cloudflare（Workers・D1）だけで運用し、コストを抑制
 - オフライン優先の設計で、アカウントなしでも使える
 - Figmaのデザイントークンを Web・アプリ両方で共有
-- 型検査・lint・テストをコミット前に自動実行
+- 型検査・lint・テストをコミット前に自動実行', 'サイトを見る', 'https://tsumi-note.hosokawa-lab.dev/', '/project-icons/tsumi-note.svg', 'published', '2026-09-24T15:00:00.000Z', '2026-10-19T00:00:00.000Z', '2026-10-19T00:00:00.000Z');

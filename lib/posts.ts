@@ -2,7 +2,7 @@ import { unstable_cache } from 'next/cache'
 import { and, desc, eq } from 'drizzle-orm'
 import { getDb } from '@/lib/db/client'
 import { posts, type PostKind } from '@/lib/db/schema'
-import { CACHE_TAGS } from '@/lib/cache-tags'
+import { CACHE_TAGS, cacheKey } from '@/lib/cache-tags'
 import { toJstDate } from '@/lib/learning/date'
 import {
   getAllNotes,
@@ -34,7 +34,7 @@ async function readPublishedPosts(kind: PostKind) {
     .orderBy(desc(posts.publishedAt))
 }
 
-export const getPublishedDbPosts = unstable_cache(readPublishedPosts, ['posts-published'], {
+export const getPublishedDbPosts = unstable_cache(readPublishedPosts, cacheKey('posts-published'), {
   tags: [CACHE_TAGS.posts],
 })
 
@@ -46,7 +46,7 @@ async function readPublishedPost(kind: PostKind, slug: string) {
   return row ?? null
 }
 
-export const getPublishedDbPost = unstable_cache(readPublishedPost, ['post-published'], {
+export const getPublishedDbPost = unstable_cache(readPublishedPost, cacheKey('post-published'), {
   tags: [CACHE_TAGS.posts],
 })
 

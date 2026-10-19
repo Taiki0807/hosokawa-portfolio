@@ -3,7 +3,7 @@ import { inArray } from 'drizzle-orm'
 import { z } from 'zod'
 import { getDb } from '@/lib/db/client'
 import { siteSettings } from '@/lib/db/schema'
-import { CACHE_TAGS } from '@/lib/cache-tags'
+import { CACHE_TAGS, cacheKey } from '@/lib/cache-tags'
 
 // 「AI整形バッジの表示」「公開前の確認」は固定のため、設定項目にしない
 
@@ -50,7 +50,7 @@ export async function readSettings(): Promise<SiteSettings> {
   }
 }
 
-export const getSettings = unstable_cache(readSettings, ['site-settings'], {
+export const getSettings = unstable_cache(readSettings, cacheKey('site-settings'), {
   tags: [CACHE_TAGS.settings],
 })
 
