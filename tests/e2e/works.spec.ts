@@ -32,3 +32,18 @@ test('URL 名にリンクを入れても案内に従って保存でき、公開�
   const card = page.locator('#projects a', { hasText: 'E2E の成果物' })
   await expect(card.getByText('🎮')).toBeVisible()
 })
+
+test('つみノートは管理画面（D1）の記事として表示され、編集画面から開ける', async ({
+  page,
+  ownerContext,
+}) => {
+  void ownerContext
+  await page.goto('/projects/tsumi-note')
+  await expect(page.getByRole('heading', { name: 'つみノート', level: 1 })).toBeVisible()
+  await expect(page.getByRole('link', { name: /サイトを見る/ })).toHaveAttribute(
+    'href',
+    'https://tsumi-note.hosokawa-lab.dev/'
+  )
+  await page.goto('/admin/works?kind=project')
+  await expect(page.getByText('つみノート', { exact: true })).toBeVisible()
+})

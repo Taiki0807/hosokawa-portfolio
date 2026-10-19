@@ -2,7 +2,7 @@ import { unstable_cache } from 'next/cache'
 import { and, asc, eq } from 'drizzle-orm'
 import { getDb } from '@/lib/db/client'
 import { reviewComments, type ReviewPersona } from '@/lib/db/schema'
-import { CACHE_TAGS } from '@/lib/cache-tags'
+import { CACHE_TAGS, cacheKey } from '@/lib/cache-tags'
 
 export type ReviewCommentRow = typeof reviewComments.$inferSelect
 
@@ -45,9 +45,13 @@ export async function readPublishedReview() {
   return { comments: rows, updatedAt }
 }
 
-export const getPublishedReview = unstable_cache(readPublishedReview, ['review-published'], {
-  tags: [CACHE_TAGS.review],
-})
+export const getPublishedReview = unstable_cache(
+  readPublishedReview,
+  cacheKey('review-published'),
+  {
+    tags: [CACHE_TAGS.review],
+  }
+)
 
 /** 根拠リンクはサイト内のパスかページ内アンカー、https のみ許可する */
 export function safeEvidenceHref(href: string): string | null {

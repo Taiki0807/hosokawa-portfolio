@@ -2,7 +2,7 @@ import { unstable_cache } from 'next/cache'
 import { and, asc, desc, eq, gt, inArray, lt } from 'drizzle-orm'
 import { getDb } from '@/lib/db/client'
 import { certTargets, goals, learningEntries, learningSessions } from '@/lib/db/schema'
-import { CACHE_TAGS } from '@/lib/cache-tags'
+import { CACHE_TAGS, cacheKey } from '@/lib/cache-tags'
 import type { DayTotal } from './stats'
 import type { SessionRecord } from './goals'
 
@@ -85,9 +85,13 @@ export async function readPublicLearningData(): Promise<PublicLearningData> {
   }
 }
 
-export const getPublicLearningData = unstable_cache(readPublicLearningData, ['learning-public'], {
-  tags: [CACHE_TAGS.learning],
-})
+export const getPublicLearningData = unstable_cache(
+  readPublicLearningData,
+  cacheKey('learning-public'),
+  {
+    tags: [CACHE_TAGS.learning],
+  }
+)
 
 export type PublicEntryDetail = PublicEntry & {
   noteMd: string
@@ -152,7 +156,7 @@ export async function readPublishedEntry(date: string): Promise<PublicEntryDetai
   }
 }
 
-export const getPublishedEntry = unstable_cache(readPublishedEntry, ['learning-entry'], {
+export const getPublishedEntry = unstable_cache(readPublishedEntry, cacheKey('learning-entry'), {
   tags: [CACHE_TAGS.learning],
 })
 
@@ -168,6 +172,6 @@ export async function readGoalsData() {
   return { goals: goalRows, certTargets: certRows }
 }
 
-export const getGoalsData = unstable_cache(readGoalsData, ['goals'], {
+export const getGoalsData = unstable_cache(readGoalsData, cacheKey('goals'), {
   tags: [CACHE_TAGS.goals],
 })
