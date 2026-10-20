@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest'
+import { addDays, todayJst } from './date'
 import { entryInputSchema, resolveEntryStatus } from './schema'
 
 const base = {
@@ -10,6 +11,14 @@ const base = {
 describe('entryInputSchema', () => {
   it('正しい入力を通す', () => {
     expect(entryInputSchema.safeParse(base).success).toBe(true)
+  })
+  it('過去の日付と今日（JST）は通し、未来の日付は弾く', () => {
+    const today = todayJst()
+    expect(entryInputSchema.safeParse({ ...base, date: '2024-01-01' }).success).toBe(true)
+    expect(entryInputSchema.safeParse({ ...base, date: today }).success).toBe(true)
+    const future = entryInputSchema.safeParse({ ...base, date: addDays(today, 1) })
+    expect(future.success).toBe(false)
+    expect(future.error?.issues[0].message).toBe('未来の日付には記録できません')
   })
   it('存在しない日付・0分・空のタグ・合計24時間超えを弾く', () => {
     expect(entryInputSchema.safeParse({ ...base, date: '2026-02-30' }).success).toBe(false)

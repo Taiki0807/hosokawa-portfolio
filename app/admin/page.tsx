@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { PageHeader, StatusPill, btnPrimary, cardClass } from '@/components/admin/ui'
 import { getOverview } from '@/lib/admin/learning'
 import { requireOwnerPage } from '@/lib/auth/require-owner'
-import { formatMonthDay, formatSlash } from '@/lib/learning/date'
+import { addDays, formatMonthDay, formatSlash } from '@/lib/learning/date'
 
 export default async function AdminOverviewPage() {
   const owner = await requireOwnerPage()
@@ -37,12 +37,20 @@ export default async function AdminOverviewPage() {
             {recordedToday ? '' : ` ・ 今日記録すると ${o.currentStreak + 1}日に伸びます`}
           </span>
         </div>
-        <Link
-          href={recordedToday ? `/admin/learning/${o.todayEntry!.id}` : '/admin/learning/new'}
-          className={`${btnPrimary} flex-none`}
-        >
-          {recordedToday ? '今日の記録を編集' : '記録する'}
-        </Link>
+        <div className="flex flex-none flex-col items-start gap-2.5">
+          <Link
+            href={recordedToday ? `/admin/learning/${o.todayEntry!.id}` : '/admin/learning/new'}
+            className={btnPrimary}
+          >
+            {recordedToday ? '今日の記録を編集' : '記録する'}
+          </Link>
+          <Link
+            href={`/admin/learning/new?date=${addDays(o.today, -1)}`}
+            className="text-ink-inverse-50 text-[13px] font-bold underline"
+          >
+            昨日以前の記録を書く
+          </Link>
+        </div>
       </div>
 
       <dl className="mt-6 grid grid-cols-2 gap-5 lg:grid-cols-4">

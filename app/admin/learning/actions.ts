@@ -76,6 +76,12 @@ export const deleteEntry = ownerAction(
   }
 )
 
+/** 記録フォームで日付を選んだときに、その日の記録がすでにあるかを返す */
+export const findEntryByDate = ownerAction(
+  z.object({ date: z.string().refine(isIsoDate) }),
+  async ({ date }) => ({ id: await getEntryIdByDate(date) })
+)
+
 const polishInputSchema = z.object({
   date: z.string().refine(isIsoDate),
   sessions: z.array(sessionInputSchema).min(1).max(10),

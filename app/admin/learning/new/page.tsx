@@ -14,18 +14,21 @@ type Props = { searchParams: Promise<{ date?: string }> }
 
 export default async function NewLearningPage({ searchParams }: Props) {
   const { date: qDate } = await searchParams
-  const date = qDate && isIsoDate(qDate) ? qDate : todayJst()
-  // その日の記録がすでにあれば編集画面へ
+  const today = todayJst()
+  const requested = qDate && isIsoDate(qDate) && qDate <= today ? qDate : null
+  const date = requested ?? today
   const existing = await getEntryIdByDate(date)
-  if (existing) redirect(`/admin/learning/${existing}`)
+  // 日付を指定して開いたときだけ、その日の記録の編集へ移る。
+  // 指定がなければ今日の記録があってもこの画面のままにし、ほかの日を選べるようにする
+  if (existing && requested) redirect(`/admin/learning/${existing}`)
 
   const [settings, tags] = await Promise.all([readSettings(), getTagSuggestions(SUGGESTED_TAGS)])
   return (
     <>
       <PageHeader
         eyebrow="Admin"
-        title="今日の記録を書く"
-        description="時間・タグ・一言メモは自分で入力します。AIは入力内容を読みやすい日報の文章に整えるだけで、事実は足しません。"
+        title="記録を書く"
+        description="日付は過去の日も選べます。時間・タグ・一言メモは自分で入力します。AIは入力内容を読みやすい日報の文章に整えるだけで、事実は足しません。"
       />
       <LearningForm
         initial={newFormValues(date)}
@@ -33,6 +36,8 @@ export default async function NewLearningPage({ searchParams }: Props) {
         aiEnabled={settings.ai.enabled}
         publishOnSave={settings.publish.publishOnSave}
         showNotes={settings.publish.showNotes}
+        today={today}
+        initialConflictId={existing}
       />
     </>
   )
