@@ -2,16 +2,16 @@
 
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useId, useMemo, useState, useTransition } from 'react'
+import { useEffect, useId, useMemo, useState, useTransition } from 'react'
 import AiBadge from '@/components/learning/AiBadge'
 import NoteMarkdown from '@/components/learning/NoteMarkdown'
 import Segmented from '@/components/ui/Segmented'
 import Tag from '@/components/ui/Tag'
 import { SparkleIcon } from '@/components/ui/icons'
 import { HEAT_LEVEL_COLORS, minutesToLevel } from '@/lib/learning/heatmap'
-import { formatDateJa, isIsoDate } from '@/lib/learning/date'
+import { addDays, formatDateJa, isIsoDate } from '@/lib/learning/date'
 import type { EntryStatus } from '@/lib/db/schema'
-import { polishEntryReport, saveEntry } from '@/app/admin/learning/actions'
+import { findEntryByDate, polishEntryReport, saveEntry } from '@/app/admin/learning/actions'
 import { FieldError, Notice, btnPrimary, btnSecondary, inputClass, labelClass } from './ui'
 
 const PRESETS = [15, 30, 60, 90, 120]
@@ -35,7 +35,17 @@ type Props = {
   aiEnabled: boolean
   publishOnSave: boolean
   showNotes: boolean
+  /** 今日（JST）。サーバーで決めて渡す（ブラウザの時刻に頼らない） */
+  today: string
+  /** 開いたときの日付にすでにある記録（自分以外）の ID */
+  initialConflictId?: number | null
 }
+
+const DATE_SHORTCUTS = [
+  { label: '今日', days: 0 },
+  { label: '昨日', days: -1 },
+  { label: '一昨日', days: -2 },
+]
 
 const emptySession = (): SessionDraft => ({ tag: '', minutes: '', memo: '' })
 
@@ -45,6 +55,8 @@ export default function LearningForm({
   aiEnabled,
   publishOnSave,
   showNotes,
+  today,
+  initialConflictId = null,
 }: Props) {
   const router = useRouter()
   const formId = useId()
@@ -59,6 +71,29 @@ export default function LearningForm({
   const [error, setError] = useState<string | null>(null)
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({})
   const [saved, setSaved] = useState<{ status: EntryStatus; blockedByReview: boolean } | null>(null)
+  // 選んだ日付にほかの記録があるか（1日1件なので、あれば保存せずその記録の編集へ案内する）
+  const [conflict, setConflict] = useState<{ date: string; id: number | null }>({
+    date: initial.date,
+    id: initialConflictId,
+  })
+
+  useEffect(() => {
+    if (!isIsoDate(values.date) || values.date === conflict.date) return
+    let cancelled = false
+    findEntryByDate({ date: values.date }).then((res) => {
+      if (cancelled || !res.ok) return
+      setConflict({ date: values.date, id: res.data.id })
+    })
+    return () => {
+      cancelled = true
+    }
+  }, [values.date, conflict.date])
+
+  const conflictId =
+    conflict.date === values.date && conflict.id !== null && conflict.id !== values.id
+      ? conflict.id
+      : null
+  const isFuture = isIsoDate(values.date) && values.date > today
 
   const totalMinutes = values.sessions.reduce((s, x) => s + (Number(x.minutes) || 0), 0)
   const level = minutesToLevel(totalMinutes)
@@ -130,6 +165,7 @@ export default function LearningForm({
 
   const needsConfirm = values.reportAiPolished && values.reportText.trim().length > 0
   const canPublish = !needsConfirm || aiConfirmed
+  const dateBlocked = conflictId !== null || isFuture
   const err = (key: string) => fieldErrors[key]
 
   return (
@@ -163,15 +199,57 @@ export default function LearningForm({
           <label htmlFor="lf-date" className={labelClass}>
             日付
           </label>
-          <input
-            id="lf-date"
-            type="date"
-            className={`${inputClass} sm:max-w-[240px]`}
-            value={values.date}
-            aria-invalid={Boolean(err('date'))}
-            onChange={(e) => set('date', e.target.value)}
-            required
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              id="lf-date"
+              type="date"
+              className={`${inputClass} sm:max-w-[240px]`}
+              value={values.date}
+              max={today}
+              aria-invalid={Boolean(err('date')) || dateBlocked}
+              aria-describedby="lf-date-hint"
+              onChange={(e) => set('date', e.target.value)}
+              required
+            />
+            {DATE_SHORTCUTS.map(({ label, days }) => {
+              const date = addDays(today, days)
+              const on = values.date === date
+              return (
+                <button
+                  key={label}
+                  type="button"
+                  aria-pressed={on}
+                  onClick={() => set('date', date)}
+                  className={`border-brand-200 rounded-full border-[1.5px] px-3.5 py-[7px] text-xs font-bold ${
+                    on ? 'bg-surface-950 text-ink-inverse-50' : 'text-ink-950 bg-white'
+                  }`}
+                >
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+          <p id="lf-date-hint" className="text-ink-600 mt-1.5 text-xs">
+            {values.id
+              ? '日付を変えると、この記録ごと別の日に移ります。'
+              : '過去の日付の記録も書けます（1日に1件）。'}
+          </p>
+          {conflictId !== null ? (
+            <div className="mt-2">
+              <Notice tone="error">
+                {isIsoDate(values.date) ? formatDateJa(values.date) : values.date}
+                の記録はすでにあります。{' '}
+                <Link href={`/admin/learning/${conflictId}`} className="underline">
+                  その記録を編集する
+                </Link>
+              </Notice>
+            </div>
+          ) : null}
+          {isFuture ? (
+            <div className="mt-2">
+              <Notice tone="error">未来の日付には記録できません。</Notice>
+            </div>
+          ) : null}
           <FieldError message={err('date')} />
         </div>
 
@@ -361,12 +439,16 @@ export default function LearningForm({
             type="button"
             className={btnPrimary}
             onClick={polish}
-            disabled={!aiEnabled || polishing || saving}
+            disabled={!aiEnabled || polishing || saving || dateBlocked}
           >
             <SparkleIcon size={14} />
             {polishing ? '整えています…' : 'AIで整える'}
           </button>
-          <button type="submit" className={btnSecondary} disabled={saving || polishing}>
+          <button
+            type="submit"
+            className={btnSecondary}
+            disabled={saving || polishing || dateBlocked}
+          >
             {publishOnSave && canPublish ? '保存して公開' : '下書き保存'}
           </button>
         </div>
@@ -491,7 +573,7 @@ export default function LearningForm({
                 type="button"
                 className={btnPrimary}
                 onClick={() => save('publish')}
-                disabled={!canPublish || saving || polishing}
+                disabled={!canPublish || saving || polishing || dateBlocked}
               >
                 {saving ? '保存しています…' : values.status === 'draft' ? '公開する' : '更新する'}
               </button>

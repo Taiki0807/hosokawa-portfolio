@@ -40,3 +40,37 @@ test('下書きは公開ページに出ない', async ({ page, ownerContext }) =
   const res = await page.request.get('/learning/2026-10-11')
   expect(res.status()).toBe(404)
 })
+
+test('今日の記録があっても、日付を選んで過去の日の記録を書ける', async ({ page, ownerContext }) => {
+  void ownerContext
+  // 今日の記録を作る
+  await page.goto('/admin/learning/new')
+  await page.getByLabel('タグ', { exact: true }).fill('Portfolio')
+  await page.getByRole('button', { name: '30分' }).click()
+  await page.getByRole('button', { name: '下書き保存' }).click()
+  await expect(page.getByText('下書きとして保存しました。')).toBeVisible()
+  await expect(page).toHaveURL(/\/admin\/learning\/\d+$/)
+  const todayUrl = page.url()
+
+  // 「記録を書く」を開き直しても今日の編集には飛ばされず、すでにあることを案内する
+  await page.goto('/admin/learning/new')
+  await expect(page).toHaveURL(/\/admin\/learning\/new$/)
+  await expect(page.getByText(/の記録はすでにあります/)).toBeVisible()
+  await expect(page.getByRole('button', { name: '下書き保存' })).toBeDisabled()
+
+  // 過去の日付を選ぶと書ける
+  await page.getByLabel('日付').fill('2026-09-01')
+  await expect(page.getByText(/の記録はすでにあります/)).toBeHidden()
+  await page.getByLabel('タグ', { exact: true }).fill('AWS')
+  await page.getByRole('button', { name: '60分' }).click()
+  await page.getByRole('button', { name: '下書き保存' }).click()
+  await expect(page.getByText('下書きとして保存しました。')).toBeVisible()
+  await expect(page.getByRole('heading', { name: /2026年9月1日/ })).toBeVisible()
+  expect(page.url()).not.toBe(todayUrl)
+
+  // 未来の日付は保存できない
+  await page.goto('/admin/learning/new?date=2026-09-02')
+  await page.getByLabel('日付').fill('2099-01-01')
+  await expect(page.getByText('未来の日付には記録できません。')).toBeVisible()
+  await expect(page.getByRole('button', { name: '下書き保存' })).toBeDisabled()
+})

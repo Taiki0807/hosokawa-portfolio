@@ -4,7 +4,7 @@ import LearningForm from '@/components/admin/LearningForm'
 import { PageHeader } from '@/components/admin/ui'
 import { getEntry, getTagSuggestions } from '@/lib/admin/learning'
 import { readSettings } from '@/lib/settings'
-import { formatDateJa } from '@/lib/learning/date'
+import { formatDateJa, todayJst } from '@/lib/learning/date'
 import { SUGGESTED_TAGS } from '@/config/learning-domains'
 
 export const maxDuration = 60
@@ -50,6 +50,7 @@ export default async function EditLearningPage({ params }: Props) {
         aiEnabled={settings.ai.enabled}
         publishOnSave={settings.publish.publishOnSave}
         showNotes={settings.publish.showNotes}
+        today={todayJst()}
       />
     </>
   )

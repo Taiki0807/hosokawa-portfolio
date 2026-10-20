@@ -220,11 +220,12 @@ export default function LearningExplorer({ data, goals }: Props) {
             ) : null}
             {session?.user?.login ? (
               <Link
-                href="/admin/learning/new"
+                href={`/admin/learning/new?date=${selected}`}
                 className="border-ink-600 text-ink-950 flex items-center justify-between gap-3 rounded-2xl border-[1.5px] border-dashed px-[22px] py-4 text-[13px] font-bold"
               >
                 <span>
-                  今日の記録を書く <span className="text-ink-600 font-medium">（管理者用）</span>
+                  {formatMonthDay(selected)}の記録を書く・編集する{' '}
+                  <span className="text-ink-600 font-medium">（管理者用）</span>
                 </span>
                 <span aria-hidden="true">→</span>
               </Link>

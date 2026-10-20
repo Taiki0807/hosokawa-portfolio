@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import { isIsoDate } from './date'
+import { isIsoDate, todayJst } from './date'
 
 // 記録フォームの入力。クライアントとサーバーの両方で使う（サーバー側で必ず再検証する）
 
@@ -18,7 +18,11 @@ export const sessionInputSchema = z.object({
 export const entryInputSchema = z
   .object({
     id: z.number().int().positive().optional(),
-    date: z.string().refine(isIsoDate, '日付を YYYY-MM-DD で入力してください'),
+    date: z
+      .string()
+      .refine(isIsoDate, '日付を YYYY-MM-DD で入力してください')
+      // 過去の日付は書ける。未来の日付は記録として扱わない（日付は JST）
+      .refine((d) => d <= todayJst(), '未来の日付には記録できません'),
     title: z.string().trim().max(120, 'タイトルは120文字以内にしてください').default(''),
     sessions: z.array(sessionInputSchema).min(1, '記録を1つ以上入力してください').max(10),
     noteMd: z.string().max(20000, '詳細ノートが長すぎます').default(''),

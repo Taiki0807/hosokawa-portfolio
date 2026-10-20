@@ -10,7 +10,7 @@ const GROUPS: { label?: string; items: Item[] }[] = [
   {
     label: 'ログ',
     items: [
-      { href: '/admin/learning/new', label: '今日の記録を書く', exact: true },
+      { href: '/admin/learning/new', label: '記録を書く', exact: true },
       { href: '/admin/learning', label: '記録一覧' },
       { href: '/admin/review', label: 'AIレビュー' },
     ],
@@ -87,7 +87,7 @@ export default function AdminSidebar({ openInquiries }: { openInquiries: number 
         href="/admin/learning/new"
         className="text-ink-950 mt-[18px] hidden items-center justify-center gap-2 rounded-[14px] bg-lime-500 px-4 py-3.5 text-[13px] font-black lg:flex"
       >
-        ＋ 今日の記録を書く
+        ＋ 記録を書く
       </Link>
     </nav>
   )
