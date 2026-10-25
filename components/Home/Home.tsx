@@ -5,6 +5,7 @@ import Certifications from '@/components/Certifications/Certifications'
 import Project from '@/components/Project/Project'
 import Blog from '@/components/Blog/Blog'
 import Contact from '@/components/Contact/Contact'
+import ChatSection from '@/components/Chat/ChatSection'
 import Footer from '@/components/Footer/Footer'
 import LearningSection from '@/components/learning/LearningSection'
 import GoalsSection from '@/components/goals/GoalsSection'
@@ -14,6 +15,7 @@ import {
   toCertificationItems,
   toSkillItems,
 } from '@/lib/skills/queries'
+import { isLocalLlmEnabled } from '@/lib/local-llm/server'
 
 const Home = async () => {
   const { skills, certifications } = await getSkillsAndCertifications()
@@ -27,6 +29,8 @@ const Home = async () => {
       <Certifications certifications={toCertificationItems(certifications)} />
       <Project />
       <Blog />
+      {/* ローカル LLM の URL が設定されているときだけ出す */}
+      {isLocalLlmEnabled() ? <ChatSection /> : null}
       <Contact />
       <Footer />
     </div>
