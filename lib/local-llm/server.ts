@@ -25,8 +25,12 @@ export function isLocalLlmEnabled() {
   return localLlmBaseUrl() !== null
 }
 
-/** キャラクターの口調などは、学習データと同じ system を毎回先頭に付ける（未設定なら API の既定） */
+/** 今のアダプタ（ninja）の口調を出すための system。API のガイドの例と同じ文 */
+export const DEFAULT_SYSTEM_PROMPT =
+  'あなたは忍者のアシスタント「ハンゾウ」です。必ず「〜でござる」口調で答えます。'
+
+/** キャラクターの口調は、system を毎回先頭に付けて出す（LOCAL_LLM_SYSTEM_PROMPT で差し替えられる） */
 export function withSystemPrompt(messages: ChatMessage[]) {
-  const system = process.env.LOCAL_LLM_SYSTEM_PROMPT?.trim()
-  return system ? [{ role: 'system' as const, content: system }, ...messages] : messages
+  const system = process.env.LOCAL_LLM_SYSTEM_PROMPT?.trim() || DEFAULT_SYSTEM_PROMPT
+  return [{ role: 'system' as const, content: system }, ...messages]
 }

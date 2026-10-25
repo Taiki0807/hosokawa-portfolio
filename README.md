@@ -109,7 +109,7 @@ pnpm dev
 ### 6. ホームの AI チャット（任意）
 
 - `LOCAL_LLM_BASE_URL` にローカル LLM の API の URL（例：Cloudflare Tunnel の URL）を入れると、ホームにチャット欄が出ます。空なら出ません。ホームは静的生成なので、URL を変えたら再デプロイしてください。
-- `LOCAL_LLM_SYSTEM_PROMPT` に学習データと同じ system を入れると、毎回先頭に付けます（空なら API の既定値）。
+- `LOCAL_LLM_SYSTEM_PROMPT` に学習データと同じ system を入れると、毎回先頭に付けます（空なら忍者「ハンゾウ」の口調）。
 - ブラウザは API を直接呼ばず、`/api/chat`（入力の検証、送信元ごとに 1 時間 20 回まで）と `/api/chat/health`（状態表示）を通します。会話の内容はサイトの DB にもログにも残しません。
 
 ## 設計メモ
